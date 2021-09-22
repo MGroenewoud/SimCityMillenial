@@ -68,7 +68,7 @@ public class SimulationCore : MonoBehaviour
 
         // Return building that has the shortest total path between current -> target, plus target -> home
 
-        return Grid.GetPathToClosestBuildingsOfType(person.CurrentPosition, type, 50);
+        return Grid.GetPathToClosestBuildingsOfType(person.Home, type, 50);
 
     }
 }

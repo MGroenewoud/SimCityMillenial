@@ -1,11 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public enum TileEntity
 {
     // Terrain
+    [TileTypeAttribute(TileType.Terrain)]
+    Grass = 0,
     [TileTypeAttribute(TileType.Terrain)]
     Road = 1,
 

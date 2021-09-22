@@ -21,16 +21,16 @@ public class MovingState : PersonState
             return typeof(RestingState);
         }
 
-        MoveToDestination();
+        var newState = MoveToDestination();
 
-        return typeof(MovingState);
+        return newState;
     }
 
     public override void OnStateEnter() {
         GeneratePath();
     }
 
-    private void MoveToDestination()
+    private Type MoveToDestination()
     {
         _person.transform.position = Vector3.MoveTowards(_person.transform.position, CurrentMoveTarget, _person.MoveSpeed * Time.deltaTime);
 
@@ -40,12 +40,23 @@ public class MovingState : PersonState
             // Arrived at next tile, grab next tile
             if (PathToDestination.Count != 0)
             {
-                CurrentMoveTarget = GeneralUtility.GetLocalCenterOfCell(PathToDestination.Pop());
+                var nextCell = PathToDestination.Pop();
+                if (SimulationCore.Instance.Grid[nextCell.X, nextCell.Y] == TileEntity.Road || PathToDestination.Count == 0 )
+                {
+                    CurrentMoveTarget = GeneralUtility.GetLocalCenterOfCell(nextCell);
+                }
+                else
+                {
+                    Debug.Log("Path broken. Find new thing to do.");
+                    return typeof(RestingState);
+                }
             } else
             {
                 DestinationReached();
+                return typeof(RestingState);
             }
         }
+        return typeof(MovingState);
     }
 
     private void DestinationReached()
