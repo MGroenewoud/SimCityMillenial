@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Person : MonoBehaviour
@@ -9,7 +8,7 @@ public class Person : MonoBehaviour
 
     public Point CurrentPosition;
     public Point Home;
-    public float MoveSpeed = 1;
+    public float MoveSpeed = 5;
 
     public PersonNeeds Needs => GetComponent<PersonNeeds>();
     public StateMachine StateMachine => GetComponent<StateMachine>();

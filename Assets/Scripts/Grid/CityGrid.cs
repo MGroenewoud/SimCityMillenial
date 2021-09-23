@@ -86,22 +86,16 @@ public class CityGrid
         var x = cell.X;
         var y = cell.Y;
         List<Point> adjacentCells = new List<Point>();
+        
         if (x > 0)
-        {
             adjacentCells.Add(new Point(x - 1, y));
-        }
         if (x < _width - 1)
-        {
             adjacentCells.Add(new Point(x + 1, y));
-        }
         if (y > 0)
-        {
             adjacentCells.Add(new Point(x, y - 1));
-        }
         if (y < _height - 1)
-        {
             adjacentCells.Add(new Point(x, y + 1));
-        }
+
         return adjacentCells;
     }
 }

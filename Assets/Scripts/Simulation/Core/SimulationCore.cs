@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,6 +17,12 @@ public class SimulationCore : MonoBehaviour
     {
         Instance = this;
         Grid = new CityGrid(width, height);
+        InitializeIsland();
+    }
+
+    private void InitializeIsland()
+    {
+        GetComponent<IslandGeneration>().GenerateIsland();
     }
 
     // Update is called once per frame
