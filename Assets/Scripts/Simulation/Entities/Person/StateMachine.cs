@@ -8,6 +8,7 @@ public class StateMachine : MonoBehaviour
 
     public PersonState CurrentState { get; private set; }
     public event Action<PersonState> OnStateChanged;
+    public string ActiveState => CurrentState.ToString();
 
     public void SetStates(Dictionary<Type, PersonState> states)
     {

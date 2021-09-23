@@ -13,5 +13,9 @@ public class RestingState : PersonState
     public override Type Tick()
     {
         return typeof(MovingState);
+
+    public override string ToString()
+    {
+        return "Resting";
     }
 }

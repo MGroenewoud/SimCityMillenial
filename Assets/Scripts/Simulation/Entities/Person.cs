@@ -8,7 +8,7 @@ public class Person : MonoBehaviour
 
     public Point CurrentPosition;
     public Point Home;
-    public float MoveSpeed = 5;
+    public float MoveSpeed;
 
     public PersonNeeds Needs => GetComponent<PersonNeeds>();
     public StateMachine StateMachine => GetComponent<StateMachine>();
@@ -35,7 +35,7 @@ public class Person : MonoBehaviour
 
     private void OnMouseUp()
     {
-        Debug.Log("Focus on: " + CurrentPosition.ToString());
+        FindObjectOfType<PersonDetails>(true).Focus(this);
     }
 
 }

@@ -19,12 +19,18 @@ public class PersonNeeds : MonoBehaviour
     {
         foreach(var need in Needs)
         {
-            need.Value.Decay();
+            if(need.Value.NextDecay > Time.time)
+                need.Value.Decay();
         }
     }
 
     public NeedType GetBiggestNeed(HashSet<NeedType> exclude)
     {
         return Needs.Where(n => !exclude.Contains(n.Value.Type)).Select(n => n.Value).OrderBy(n => n.Weight).Last().Type;
+    }
+
+    public bool HasCriticalNeed()
+    {
+        return Needs.Any(n => n.Value.IsCritical);
     }
 }

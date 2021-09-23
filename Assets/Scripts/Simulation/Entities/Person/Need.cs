@@ -3,10 +3,12 @@ using UnityEngine;
 public class Need
 {
     public NeedType Type;
+    public float NextDecay;
     public int Weight = 0;
+    public bool IsCritical => Weight > GameSettings.CriticalNeedFactor;
 
     private float DecayRate;
-    private float NextDecay;
+    
 
     public Need(NeedType type)
     {
@@ -29,11 +31,8 @@ public class Need
 
     public void Decay()
     {
-        if (Time.time > NextDecay)
-        {
-            Weight++;
-            NextDecay = Time.time + DecayRate;
-        }
+        Weight++;
+        NextDecay = Time.time + DecayRate;
     }
 }
 

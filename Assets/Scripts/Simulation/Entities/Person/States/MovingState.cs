@@ -123,6 +123,11 @@ public class MovingState : PersonState
 
         return null;
     }
+
+    public override string ToString()
+    {
+        return "Moving";
+    }
 }
 
 public class NeedPathResult

@@ -8,4 +8,6 @@ public static class GameSettings
     public static float FoodDecayRate = 0.1f;
     [SerializeField]
     public static float EntertainmentDecayRate = 0.3f;
+    [SerializeField]
+    public static int CriticalNeedFactor = 1000;
 }
