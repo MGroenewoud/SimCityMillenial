@@ -9,7 +9,7 @@ public abstract class PersonState
 
     public virtual void OnStateEnter() { }
     public abstract Type Tick();
-    public abstract string ToString();
+    public override abstract string ToString();
 
     public PersonState(GameObject gameObject)
     {

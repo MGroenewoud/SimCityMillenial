@@ -3,9 +3,8 @@ using System;
 public enum TileEntity
 {
     // Terrain
-    [TileTypeAttribute(TileType.Terrain)]
     Grass = 0,
-    [TileTypeAttribute(TileType.Terrain)]
+    [PlacementRule(TilePlacementRule.PlacedOnEmptyTile)]
     Road = 1,
 
 
@@ -13,27 +12,19 @@ public enum TileEntity
 
 
     // Buildings
-    [TileTypeAttribute(TileType.Building)]
+    [PlacementRule(TilePlacementRule.PlacedOnEmptyTile, TilePlacementRule.MustBePlacedNextToRoad)]
     Home = 1000,
-    [TileTypeAttribute(TileType.Building)]
+    [PlacementRule(TilePlacementRule.PlacedOnEmptyTile, TilePlacementRule.MustBePlacedNextToRoad)]
     Shop = 1001,
-    [TileTypeAttribute(TileType.Building)]
+    [PlacementRule(TilePlacementRule.PlacedOnEmptyTile, TilePlacementRule.MustBePlacedNextToRoad)]
     Entertainment = 1002,
-}
+    [PlacementRule(TilePlacementRule.PlacedOnEmptyTile, TilePlacementRule.MustBePlacedNextToRoad)]
+    LumberjackShack = 1003,
 
-public enum TileType
-{
-    Terrain = 1,
-    Building = 2,
 
-}
 
-public class TileTypeAttribute : Attribute
-{
-    public TileType Type { get; set; }
 
-    public TileTypeAttribute(TileType t)
-    {
-        Type = t;
-    }
+
+    // Raw Resources
+    Wood = 2000,
 }

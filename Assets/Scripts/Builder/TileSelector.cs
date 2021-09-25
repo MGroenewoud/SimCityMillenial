@@ -1,29 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class TileSelector : MonoBehaviour
 {
     [SerializeField]
-    public TileBase Tile;
-    [SerializeField]
     public GridLayer Layer;
     [SerializeField]
     public TileEntity Entity;
 
-    public float delay;
+    [SerializeField]
+    private TileBase[] Tile;
 
-    public void SelectThisTile()
-    {
-        delay = Time.time + 0.1f;
-        Builder.Instance.Preview.SetTileSelector(this);
-    }
+    public float delay;
 
     public void PlaceTile(Tilemap layer, Point position)
     {
-        layer.SetTile(position.AsVector3Int(), Tile);
-        SimulationCore.Instance.Grid[position.X, position.Y] = Entity;
+        var canBePlaced = TilePlacementRuleProcessor.CanBePlaced(Entity);
+        if (canBePlaced)
+        {
+            layer.SetTile(position.AsVector3Int(), GrabRandomTile());
+            SimulationCore.Instance.Grid[position.X, position.Y] = Entity;
+        } else
+        {
+            Debug.Log("Can't be placed there.");
+        }
     }
 
     public void PlaceTiles(Tilemap destinationLayer, HashSet<Point> previewTiles)
@@ -32,5 +35,26 @@ public class TileSelector : MonoBehaviour
         {
             PlaceTile(destinationLayer, tile);
         }
+    }
+
+    public TileBase GetPreviewTile()
+    {
+        return Tile.First();
+    }
+
+    private void OnMouseUp()
+    {
+        delay = Time.time + 0.1f;
+        Builder.Instance.Preview.SetTileSelector(this);
+    }
+
+    private TileBase GrabRandomTile()
+    {
+        if (Tile.Length == 1)
+            return Tile.First();
+
+        var random = UnityEngine.Random.Range(0, Tile.Length);
+        return Tile[random];
+        
     }
 }

@@ -14,12 +14,4 @@ public class Builder : MonoBehaviour
         Instance = this;
         Preview = GetComponent<TilePreviewComponent>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    
 }

@@ -23,6 +23,11 @@ public static class GeneralUtility
         return pos;
     }
 
+    public static Point GetGridLocationOfMouse()
+    {
+        return MainGrid.LocalToCell(GetMousePosition()).AsPoint();
+    }
+
     public static Vector3 GetLocalCenterOfCell(Point gridLocation)
     {
         return MainGrid.GetCellCenterLocal(new Vector3Int(gridLocation.X, gridLocation.Y, 0));
@@ -45,13 +50,5 @@ public static class GeneralUtility
         if (attr.Length > 0) // a DescriptionAttribute exists; use it
             return ((DescriptionAttribute)attr[0]).Description;
         return "";
-    }
-
-    public static TileType GetTileType(this TileEntity entity)
-    {
-        object[] attr = typeof(TileEntity).GetField(entity.ToString())
-            .GetCustomAttributes(typeof(TileTypeAttribute), false);
-
-        return ((TileTypeAttribute)attr[0]).Type;
     }
 }

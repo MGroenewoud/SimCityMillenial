@@ -68,7 +68,7 @@ public class TilePreviewComponent : MonoBehaviour
             else
                 DestinationLayer.ClearAllEditorPreviewTiles();
 
-            DestinationLayer.SetEditorPreviewTile(cellPos, CurrentTileSelector.Tile);
+            DestinationLayer.SetEditorPreviewTile(cellPos, CurrentTileSelector.GetPreviewTile());
         }
     }
 }

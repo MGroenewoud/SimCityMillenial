@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CityGrid
@@ -65,7 +66,19 @@ public class CityGrid
     }
 
 
-    public List<Point> GetPathToClosestBuildingsOfType(Point origin, TileEntity type, int range)
+    public List<Point> GetClosestBuildingsOfTypes(Point origin, TileEntity[] types, int range)
+    {
+        var buildingsOfType = new List<Point>();
+
+        foreach(var type in types)
+        {
+            buildingsOfType.AddRange(GetClosestBuildingsOfType(origin, type, range));
+        }
+
+        return buildingsOfType;
+    }
+
+    public List<Point> GetClosestBuildingsOfType(Point origin, TileEntity type, int range)
     {
         var buildingsOfType = new List<Point>();
 
@@ -78,7 +91,11 @@ public class CityGrid
         }
 
         return buildingsOfType;
+    }
 
+    public bool HasResourceInRange(Point origin, TileEntity resource, int range)
+    {
+        return GetClosestBuildingsOfType(origin, resource, range).Any();
     }
 
     public List<Point> GetAllAdjacentCells(Point cell)
