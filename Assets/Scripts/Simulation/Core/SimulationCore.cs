@@ -22,7 +22,7 @@ public class SimulationCore : MonoBehaviour
 
     private void InitializeIsland()
     {
-        GetComponent<IslandGeneration>().GenerateIsland();
+        GetComponent<MapGenerator>().GenerateIsland(width, 5);
     }
 
     // Update is called once per frame

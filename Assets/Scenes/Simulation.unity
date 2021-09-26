@@ -1409,7 +1409,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1628097058}
   - component: {fileID: 1628097059}
-  - component: {fileID: 1628097060}
+  - component: {fileID: 1628097061}
   m_Layer: 0
   m_Name: Simulation
   m_TagString: Untagged
@@ -1447,7 +1447,7 @@ MonoBehaviour:
   height: 50
   Dot: {fileID: 7374486660071777519, guid: 735480b0b0aa4b949ba880aff7bb90fd, type: 3}
   PersonPrefab: {fileID: 2964154334485464181, guid: 903e24cc6fd455249b2a17f99b8cf555, type: 3}
---- !u!114 &1628097060
+--- !u!114 &1628097061
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1456,12 +1456,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1628097057}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc8853882434f014e8c16a8b29b86d3b, type: 3}
+  m_Script: {fileID: 11500000, guid: 0341c7866f7a7c6448aff6228df4c1f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Ocean: {fileID: 11400000, guid: 7d14eea7f1c625345b6e303def015f7f, type: 2}
   Grass: {fileID: 11400000, guid: 7381da23e32cb764ea47e8d340c477db, type: 2}
-  IslandOffset: 5
+  Water: {fileID: 11400000, guid: b0e564fa4ebc435469e5bb2a8b9e1824, type: 2}
+  Forest:
+  - {fileID: 11400000, guid: a21d813540af7a8458c0c4809ce94985, type: 2}
+  - {fileID: 11400000, guid: 7de8d8abe2d27c14a95d5bb6b2e2fe53, type: 2}
+  - {fileID: 11400000, guid: 99dd38da8e6991b42931a8e4df83d133, type: 2}
+  - {fileID: 11400000, guid: 01891ea2a4ddcf949b4bbd0ef7b2e1ef, type: 2}
+  - {fileID: 11400000, guid: 6e669e030dea6c64d898cfe8b3520c39, type: 2}
+  - {fileID: 11400000, guid: 938f3b67249123446bf16d7eea625635, type: 2}
+  - {fileID: 11400000, guid: 9689f0b5e73b4e140b2eedd4296d772a, type: 2}
+  - {fileID: 11400000, guid: d8ff337c4f7dc8b4fad39c7f19132b2a, type: 2}
+  - {fileID: 11400000, guid: 5f94307235c5b494dbe3eb5f986487e3, type: 2}
+  - {fileID: 11400000, guid: 9c2422a8d13811a42ae38f682a02c93a, type: 2}
+  - {fileID: 11400000, guid: 937ea76d956ee0649875227266a2606b, type: 2}
+  - {fileID: 11400000, guid: d90fca417438c42489bee2a7d1cd8347, type: 2}
 --- !u!1 &1763449185
 GameObject:
   m_ObjectHideFlags: 0

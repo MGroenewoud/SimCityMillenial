@@ -6,6 +6,7 @@ public enum TileEntity
     Grass = 0,
     [PlacementRule(TilePlacementRule.PlacedOnEmptyTile)]
     Road = 1,
+    Ocean = 2,
 
 
 

@@ -7,19 +7,20 @@ public static class TilePlacementRuleProcessor
     public static Dictionary<TilePlacementRule, Func<bool>> RuleLibrary;
 
     private static bool IsInitialized = false;
-    public static void Initialize()
-    {
-        RuleLibrary = new Dictionary<TilePlacementRule, Func<bool>>() {
-            { TilePlacementRule.MustBePlacedNextToRoad, () => MustBePlacedAdjacentToTileType(TileEntity.Road) },
-            { TilePlacementRule.PlacedOnEmptyTile, () => MustBePlacedOn(TileEntity.Grass) }
-        };
-    }
-
+    
     public static bool CanBePlaced(TileEntity entity)
     {
         if (!IsInitialized)
             Initialize();
         return PassesRules(entity.GetRulesFromEntity());
+    }
+
+    private static void Initialize()
+    {
+        RuleLibrary = new Dictionary<TilePlacementRule, Func<bool>>() {
+            { TilePlacementRule.MustBePlacedNextToRoad, () => MustBePlacedAdjacentToTileType(TileEntity.Road) },
+            { TilePlacementRule.PlacedOnEmptyTile, () => MustBePlacedOn(TileEntity.Grass) }
+        };
     }
 
     private static bool PassesRules(TilePlacementRule[] ruleTypes)
