@@ -22,6 +22,7 @@ public class Person : MonoBehaviour
         Needs = GetComponent<PersonNeeds>();
         StateMachine = GetComponent<StateMachine>();
         Movement = GetComponent<PersonMovement>();
+        Inventory = GetComponent<PersonInventory>();
 
         InitializeNeeds();
         InitializeStateMachine();

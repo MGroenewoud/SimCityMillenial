@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -21,6 +22,10 @@ public class MapGenerator : MonoBehaviour
             for (int y = 0; y < size; y++)
             {
                 var tileToSet = GetTile(map[x, y]);
+                if (Forest.Contains(tileToSet))
+                    SimulationCore.Instance.Grid[x, y] = TileEntity.Forest;
+                else
+                    SimulationCore.Instance.Grid[x, y] = TileEntity.Grass;
                 SetTile(x, y, tileToSet);
             }
         }
@@ -32,7 +37,6 @@ public class MapGenerator : MonoBehaviour
         var islandShape = GenerateSquareGradient(gridsize, gridsize);
         var resultMap = SubtractNoiseMaps(heightMap, islandShape);
 
-
         CreateRandomGrid(resultMap, gridsize);
     }
 
@@ -40,13 +44,11 @@ public class MapGenerator : MonoBehaviour
     {
         var layer = GeneralUtility.GetTilemap(GridLayer.BaseLayer);
         layer.SetTile(new Point(x,y).AsVector3Int(), tileToSet);
-        SimulationCore.Instance.Grid[x, y] = TileEntity.Grass;
     }
 
     private TileBase GetTile(float v)
     {
         var tileType = Grass;
-
         if (v < 0.2)
             tileType = Water;
         else if (v > 0.8)

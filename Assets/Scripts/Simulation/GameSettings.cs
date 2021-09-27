@@ -13,5 +13,5 @@ public static class GameSettings
 
     public static TileEntity[] RoadTiles = new TileEntity[] { TileEntity.Road };
 
-    public static TileEntity[] WalkableTiles = new TileEntity[] { TileEntity.Grass };
+    public static TileEntity[] WalkableTiles = new TileEntity[] { TileEntity.Grass, TileEntity.Road };
 }

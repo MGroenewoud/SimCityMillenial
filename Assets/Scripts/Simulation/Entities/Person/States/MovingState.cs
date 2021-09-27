@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class MovingState : PersonState
@@ -14,6 +13,7 @@ public class MovingState : PersonState
 
     public override void OnStateEnter()
     {
+        DestinationNeedType = NeedType.None;
         GeneratePath();
     }
 

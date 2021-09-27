@@ -23,7 +23,7 @@ public static class TilePlacementRuleProcessor
         RuleLibrary = new Dictionary<TilePlacementRule, Func<bool>>() {
             { TilePlacementRule.MustBePlacedNextToRoad, () => MustBePlacedAdjacentToTileType(TileEntity.Road) },
             { TilePlacementRule.PlacedOnEmptyTile, () => MustBePlacedOn(TileEntity.Grass) },
-            { TilePlacementRule.MustBePlacedCloseToForest, () => MustBePlacedCloseTo(TileEntity.Wood) }
+            { TilePlacementRule.MustBePlacedCloseToForest, () => MustBePlacedCloseTo(TileEntity.Forest) }
         };
     }
 

@@ -8,7 +8,7 @@ public class WorkingState : PersonState
     private Point WorkSpot;
 
     private WorkState State;
-    private float HarvestRate = 10f;
+    private float HarvestRate = 1f;
     private float NextHarvestTick = 0f;
 
     public WorkingState(Person person) : base(person.gameObject)
@@ -18,8 +18,9 @@ public class WorkingState : PersonState
 
     public override void OnStateEnter()
     {
+        State = WorkState.MoveToResource;
         WorkBase = _person.CurrentPosition;
-        WorkSpot = SimulationCore.Instance.Grid.GetClosestBuildingOfType(WorkBase, TileEntity.Wood, 10).RandomItem();
+        WorkSpot = SimulationCore.Instance.Grid.GetClosestBuildingOfType(WorkBase, TileEntity.Forest, 10).RandomItem();
         _person.Movement.GeneratePath(WorkBase, WorkSpot, GameSettings.WalkableTiles);
     }
 
@@ -42,9 +43,8 @@ public class WorkingState : PersonState
 
     private void MoveToResource()
     {
-        _person.Movement.MoveToDestination();
-        var localWorkSpot = GeneralUtility.GetLocalCenterOfCell(WorkSpot);
-        if (_person.gameObject.transform.position.IsSamePositionAs(localWorkSpot))
+        _person.Movement.MoveToDestination(GameSettings.WalkableTiles);
+        if (gameObject.transform.position.IsSamePositionAs(GeneralUtility.GetLocalCenterOfCell(WorkSpot)))
         {
             // Arrived at thing to harvest.
             State = WorkState.Harvesting;
@@ -62,6 +62,7 @@ public class WorkingState : PersonState
             {
                 _person.Movement.GeneratePath(WorkSpot, WorkBase, GameSettings.WalkableTiles);
                 State = WorkState.MoveBackToBase;
+                return;
             }
         } 
         if (_person.Needs.HasCriticalNeed())
@@ -73,14 +74,17 @@ public class WorkingState : PersonState
 
     private Type ReturnResourcesToBase()
     {
-        _person.Movement.MoveToDestination();
-        if (gameObject.transform.position == GeneralUtility.GetLocalCenterOfCell(WorkBase))
+        _person.Movement.MoveToDestination(GameSettings.WalkableTiles);
+        if (gameObject.transform.position.IsSamePositionAs((GeneralUtility.GetLocalCenterOfCell(WorkBase))))
         {
+            var amount = _person.Inventory.RemoveItem(ItemType.Wood);
+            Debug.Log("Deposited " + amount + " wood.");
             if (_person.Needs.HasCriticalNeed())
             {
-                return typeof(RestingState);
+                return typeof(MovingState);
             }
-            _person.Movement.GeneratePath(WorkBase, WorkSpot);
+            _person.Movement.GeneratePath(WorkBase, WorkSpot, GameSettings.WalkableTiles);
+            State = WorkState.MoveToResource;
         }
         return typeof(WorkingState);
     }

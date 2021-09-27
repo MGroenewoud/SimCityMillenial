@@ -28,6 +28,20 @@ public class PersonInventory : MonoBehaviour
             Inventory.Add(type, new InventoryItem() { Amount = amount, Weight = 1 });
         }
     }
+
+    public int RemoveItem(ItemType type)
+    {
+        var amount = 0;
+        if (Inventory.ContainsKey(type))
+        {
+            var items = Inventory[type];
+            amount = items.Amount;
+            items.Amount = 0;
+            Inventory[type] = items;
+        }
+
+        return amount;
+    }
 }
 
 public struct InventoryItem

@@ -27,5 +27,5 @@ public enum TileEntity
 
 
     // Raw Resources
-    Wood = 2000,
+    Forest = 2000,
 }

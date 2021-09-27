@@ -30,8 +30,10 @@ public class PersonMovement : MonoBehaviour
             transform.rotation = Quaternion.Euler(direction.Item2);
     }
 
-    public bool MoveToDestination()
+    public bool MoveToDestination(TileEntity[] travelableTiles = null)
     {
+        if (travelableTiles == null)
+            travelableTiles = GameSettings.RoadTiles;
         CurrentMoveTarget.z = -(1 / 2);
         transform.position = Vector3.MoveTowards(_person.transform.position, CurrentMoveTarget, _person.MoveSpeed * Time.deltaTime);
 
@@ -42,7 +44,7 @@ public class PersonMovement : MonoBehaviour
             if (PathToDestination.Count != 0)
             {
                 var nextCell = PathToDestination.Pop();
-                if (SimulationCore.Instance.Grid[nextCell.X, nextCell.Y] == TileEntity.Road || PathToDestination.Count == 0)
+                if (travelableTiles.Contains(SimulationCore.Instance.Grid[nextCell.X, nextCell.Y]) || PathToDestination.Count == 0)
                 {
                     CurrentMoveTarget = GeneralUtility.GetLocalCenterOfCell(nextCell);
                     FacePosition(CurrentMoveTarget);
