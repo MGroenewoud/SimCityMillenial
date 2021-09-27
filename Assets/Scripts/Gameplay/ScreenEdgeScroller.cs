@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ScreenEdgeScroller : MonoBehaviour
@@ -17,14 +18,18 @@ public class ScreenEdgeScroller : MonoBehaviour
     void Update()
     {
         var position = Cam.transform.position;
-        if (Input.mousePosition.x > Screen.width - EdgeSize)
+        var gridsizeWidth = SimulationCore.Instance.Grid.Width;
+        var gridsizeHeight = SimulationCore.Instance.Grid.Height;
+
+        if (Input.mousePosition.x > Screen.width - EdgeSize && position.x < (gridsizeWidth / 2))
             position.x += Movespeed * Time.deltaTime;
-        if (Input.mousePosition.x < EdgeSize)
+        if (Input.mousePosition.x < EdgeSize && position.x > -(gridsizeWidth / 2))
             position.x -= Movespeed * Time.deltaTime;
-        if (Input.mousePosition.y > Screen.height - EdgeSize)
+        if (Input.mousePosition.y > Screen.height - EdgeSize && position.y < (gridsizeHeight / 2))
             position.y += Movespeed * Time.deltaTime;
-        if (Input.mousePosition.y < EdgeSize)
+        if (Input.mousePosition.y < EdgeSize && position.y > 0)
             position.y -= Movespeed * Time.deltaTime;
         Cam.transform.position = position;
     }
+
 }

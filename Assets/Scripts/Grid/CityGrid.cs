@@ -7,10 +7,11 @@ public class CityGrid
 {
 
     private TileEntity[,] _grid;
-    private int _width;
+    
     public int Width { get { return _width; } }
     private int _height;
     public int Height { get { return _height; } }
+    private int _width;
 
     public Dictionary<TileEntity, List<Point>> AllGridEntities;
     
