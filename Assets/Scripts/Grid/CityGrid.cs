@@ -72,13 +72,13 @@ public class CityGrid
 
         foreach(var type in types)
         {
-            buildingsOfType.AddRange(GetClosestBuildingsOfType(origin, type, range));
+            buildingsOfType.AddRange(GetClosestBuildingOfType(origin, type, range));
         }
 
         return buildingsOfType;
     }
 
-    public List<Point> GetClosestBuildingsOfType(Point origin, TileEntity type, int range)
+    public List<Point> GetClosestBuildingOfType(Point origin, TileEntity type, int range)
     {
         var buildingsOfType = new List<Point>();
 
@@ -95,7 +95,7 @@ public class CityGrid
 
     public bool HasResourceInRange(Point origin, TileEntity resource, int range)
     {
-        return GetClosestBuildingsOfType(origin, resource, range).Any();
+        return GetClosestBuildingOfType(origin, resource, range).Any();
     }
 
     public List<Point> GetAllAdjacentCells(Point cell)

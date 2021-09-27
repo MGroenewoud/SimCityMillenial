@@ -27,8 +27,7 @@ public class MovingState : PersonState
         var destinationReached = _person.Movement.MoveToDestination();
         if (destinationReached)
         {
-            DestinationReached();
-            return typeof(RestingState);
+            return DestinationReached();
         }
         else
         {
@@ -89,7 +88,7 @@ public class MovingState : PersonState
         }
         else if (DestinationNeedType == NeedType.None)
         {
-            var buildingsInRange = SimulationCore.Instance.Grid.GetClosestBuildingsOfType(_person.Home, TileEntity.LumberjackShack, 50);
+            var buildingsInRange = SimulationCore.Instance.Grid.GetClosestBuildingOfType(_person.Home, TileEntity.LumberjackShack, 50);
 
             return GridSearch.AStarSearch(_person.CurrentPosition, buildingsInRange);
         }

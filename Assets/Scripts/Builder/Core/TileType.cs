@@ -19,7 +19,7 @@ public enum TileEntity
     Shop = 1001,
     [PlacementRule(TilePlacementRule.PlacedOnEmptyTile, TilePlacementRule.MustBePlacedNextToRoad)]
     Entertainment = 1002,
-    [PlacementRule(TilePlacementRule.PlacedOnEmptyTile, TilePlacementRule.MustBePlacedNextToRoad)]
+    [PlacementRule(TilePlacementRule.PlacedOnEmptyTile, TilePlacementRule.MustBePlacedNextToRoad, TilePlacementRule.MustBePlacedCloseToForest)]
     LumberjackShack = 1003,
 
 

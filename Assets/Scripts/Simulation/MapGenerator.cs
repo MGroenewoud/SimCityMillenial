@@ -68,14 +68,8 @@ public class MapGenerator : MonoBehaviour
             {
                 float posX = (float)x / scale;
                 float posY = (float)y / scale;
-                try
-                {
-                    noiseMap[x, y] = Mathf.PerlinNoise(posX, posY);
-                }catch(Exception e)
-                {
-                    Debug.Log("nope");
-                    break;
-                }
+
+                noiseMap[x, y] = Mathf.PerlinNoise(posX, posY);
             }
         }
 

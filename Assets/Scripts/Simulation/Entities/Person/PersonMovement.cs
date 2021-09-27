@@ -15,7 +15,14 @@ public class PersonMovement : MonoBehaviour
         _person = GetComponent<Person>();
     }
 
-    public void FacePosition(Vector3 target)
+    public void GeneratePath(Point from, Point to, TileEntity[] walkableTiles = null)
+    {
+        PathToDestination = GridSearch.AStarSearch(from, to, walkableTiles);
+        CurrentMoveTarget = GeneralUtility.GetLocalCenterOfCell(PathToDestination.Pop());
+        FacePosition(_person.Movement.CurrentMoveTarget);
+    }
+
+        public void FacePosition(Vector3 target)
     {
         var delta = GeneralUtility.MainGrid.LocalToCell(target) - GeneralUtility.MainGrid.LocalToCell(transform.position);
         var direction = Direction.All.FirstOrDefault(d => d.Item1 == delta);

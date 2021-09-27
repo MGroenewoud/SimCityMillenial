@@ -1,19 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Person : MonoBehaviour
 {
+    public float MoveSpeed;
+    public int InventoryLimit = 10;
+
     public static List<Person> People = new List<Person>();
 
     public Point CurrentPosition;
     public Point Home;
-    public float MoveSpeed;
-
+    
     public PersonNeeds Needs;
     public PersonMovement Movement;
     public StateMachine StateMachine;
+    public PersonInventory Inventory;
 
     void Awake()
     {

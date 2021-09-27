@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 /// <summary>
 /// Source https://github.com/lordjesus/Packt-Introduction-to-graph-algorithms-for-game-developers
 /// </summary>
-public class GridSearch
+public partial class GridSearch
 {
 
     public struct SearchResult
@@ -12,24 +13,29 @@ public class GridSearch
         public List<Point> Path { get; set; }
     }
 
-    public static Stack<Point> AStarSearch(Point startPosition, Point endPosition)
+    public static Stack<Point> AStarSearch(Point startPosition, Point endPosition, TileEntity[] walkableTiles = null)
     {
         var grid = SimulationCore.Instance.Grid;
-        Stack<Point> path = new Stack<Point>();
+        var path = new Stack<Point>();
 
-        List<Point> positionsTocheck = new List<Point>();
-        Dictionary<Point, float> costDictionary = new Dictionary<Point, float>();
-        Dictionary<Point, float> priorityDictionary = new Dictionary<Point, float>();
-        Dictionary<Point, Point> parentsDictionary = new Dictionary<Point, Point>();
+        var positionsTocheck = new List<Point>();
+        var costDictionary = new Dictionary<Point, float>();
+        var priorityDictionary = new Dictionary<Point, float>();
+        var parentsDictionary = new Dictionary<Point, Point>();
 
         positionsTocheck.Add(startPosition);
         priorityDictionary.Add(startPosition, 0);
         costDictionary.Add(startPosition, 0);
         parentsDictionary.Add(startPosition, null);
 
+        if(walkableTiles == null)
+        {
+            walkableTiles = GameSettings.RoadTiles;
+        }
+
         while (positionsTocheck.Count > 0)
         {
-            Point current = GetClosestVertex(positionsTocheck, priorityDictionary);
+            var current = GetClosestVertex(positionsTocheck, priorityDictionary);
             positionsTocheck.Remove(current);
             if (current.Equals(endPosition))
             {
@@ -37,9 +43,9 @@ public class GridSearch
                 return path;
             }
 
-            foreach (Point neighbour in grid.GetAllAdjacentCells(current))
+            foreach (var neighbour in grid.GetAllAdjacentCells(current))
             {
-                if (neighbour.Equals(endPosition) || grid[neighbour.X, neighbour.Y] == TileEntity.Road)
+                if (neighbour.Equals(endPosition) || walkableTiles.Contains(grid[neighbour.X, neighbour.Y]))
                 {
                     float newCost = costDictionary[current] + grid.GetCostOfEnteringCell(neighbour);
                     if (!costDictionary.ContainsKey(neighbour) || newCost < costDictionary[neighbour])

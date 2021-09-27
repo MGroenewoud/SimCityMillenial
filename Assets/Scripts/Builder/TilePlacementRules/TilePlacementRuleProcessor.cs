@@ -7,7 +7,10 @@ public static class TilePlacementRuleProcessor
     public static Dictionary<TilePlacementRule, Func<bool>> RuleLibrary;
 
     private static bool IsInitialized = false;
-    
+
+    private static Point Target => GeneralUtility.GetGridLocationOfMouse();
+
+
     public static bool CanBePlaced(TileEntity entity)
     {
         if (!IsInitialized)
@@ -19,7 +22,8 @@ public static class TilePlacementRuleProcessor
     {
         RuleLibrary = new Dictionary<TilePlacementRule, Func<bool>>() {
             { TilePlacementRule.MustBePlacedNextToRoad, () => MustBePlacedAdjacentToTileType(TileEntity.Road) },
-            { TilePlacementRule.PlacedOnEmptyTile, () => MustBePlacedOn(TileEntity.Grass) }
+            { TilePlacementRule.PlacedOnEmptyTile, () => MustBePlacedOn(TileEntity.Grass) },
+            { TilePlacementRule.MustBePlacedCloseToForest, () => MustBePlacedCloseTo(TileEntity.Wood) }
         };
     }
 
@@ -38,14 +42,17 @@ public static class TilePlacementRuleProcessor
 
     private static bool MustBePlacedAdjacentToTileType(TileEntity type)
     {
-        var target = GeneralUtility.GetGridLocationOfMouse();
-        return SimulationCore.Instance.Grid.GetAdjacentCellsOfType(target, type).Any();
+        return SimulationCore.Instance.Grid.GetAdjacentCellsOfType(Target, type).Any();
     }
 
     private static bool MustBePlacedOn(TileEntity type)
     {
-        var target = GeneralUtility.GetGridLocationOfMouse();
-        return SimulationCore.Instance.Grid[target.X, target.Y] == type;
+        return SimulationCore.Instance.Grid[Target.X, Target.Y] == type;
+    }
+
+    private static bool MustBePlacedCloseTo(TileEntity type)
+    {
+        return GridSearch.DijkstraHasEntitiesInRange(Target, type, 4);
     }
 
     private static TilePlacementRule[] GetRulesFromEntity(this TileEntity enumValue)
@@ -64,6 +71,7 @@ public enum TilePlacementRule
 {
     MustBePlacedNextToRoad,
     PlacedOnEmptyTile,
+    MustBePlacedCloseToForest,
 }
 
 public class PlacementRuleAttribute : Attribute
