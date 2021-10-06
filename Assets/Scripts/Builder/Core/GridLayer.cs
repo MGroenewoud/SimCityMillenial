@@ -4,8 +4,6 @@ public enum GridLayer
 {
     [Description("BaseLayer")]
     BaseLayer = 0,
-    [Description("Roads")]
-    Roads = 1,
-    [Description("Buildings")]
-    Buildings = 2,
+    [Description("Obstacles")]
+    Obstacles = 1,
 }

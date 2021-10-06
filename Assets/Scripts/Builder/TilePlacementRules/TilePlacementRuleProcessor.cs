@@ -8,11 +8,11 @@ public static class TilePlacementRuleProcessor
 
     private static bool IsInitialized = false;
 
-    private static Point Target => GeneralUtility.GetGridLocationOfMouse();
+    private static Point Target;
 
-
-    public static bool CanBePlaced(TileEntity entity)
+    public static bool CanBePlaced(TileEntity entity, Point target)
     {
+        Target = target;
         if (!IsInitialized)
             Initialize();
         return PassesRules(entity.GetRulesFromEntity());
@@ -23,7 +23,9 @@ public static class TilePlacementRuleProcessor
         RuleLibrary = new Dictionary<TilePlacementRule, Func<bool>>() {
             { TilePlacementRule.MustBePlacedNextToRoad, () => MustBePlacedAdjacentToTileType(TileEntity.Road) },
             { TilePlacementRule.PlacedOnEmptyTile, () => MustBePlacedOn(TileEntity.Grass) },
-            { TilePlacementRule.MustBePlacedCloseToForest, () => MustBePlacedCloseTo(TileEntity.Forest) }
+            { TilePlacementRule.MustBePlacedCloseToForest, () => MustBePlacedCloseTo(TileEntity.Forest) },
+            { TilePlacementRule.MustBePlacedNextToFence, () => MustBePlacedAdjacentToTileType(TileEntity.Fence) },
+            { TilePlacementRule.MustBePlacedNextToFarmDirt, () => MustBePlacedAdjacentToTileType(TileEntity.FarmDirt) },
         };
     }
 
@@ -72,6 +74,8 @@ public enum TilePlacementRule
     MustBePlacedNextToRoad,
     PlacedOnEmptyTile,
     MustBePlacedCloseToForest,
+    MustBePlacedNextToFence,
+    MustBePlacedNextToFarmDirt,
 }
 
 public class PlacementRuleAttribute : Attribute

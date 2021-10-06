@@ -10,15 +10,17 @@ public class TileSelector : MonoBehaviour
     public GridLayer Layer;
     [SerializeField]
     public TileEntity Entity;
+    [SerializeField]
+    public PreviewModeType PreviewMode;
 
     [SerializeField]
     private TileBase[] Tile;
-
+    
     public float delay;
 
     public void PlaceTile(Tilemap layer, Point position)
     {
-        var canBePlaced = TilePlacementRuleProcessor.CanBePlaced(Entity);
+        var canBePlaced = TilePlacementRuleProcessor.CanBePlaced(Entity, position);
         if (canBePlaced)
         {
             layer.SetTile(position.AsVector3Int(), GrabRandomTile());
@@ -29,7 +31,7 @@ public class TileSelector : MonoBehaviour
         }
     }
 
-    public void PlaceTiles(Tilemap destinationLayer, HashSet<Point> previewTiles)
+    public void PlaceTiles(Tilemap destinationLayer, Point[] previewTiles)
     {
         foreach(var tile in previewTiles)
         {

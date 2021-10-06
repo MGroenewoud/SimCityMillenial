@@ -12,13 +12,10 @@ public class SimulationCore : MonoBehaviour
     public GameObject Dot;
     public Person PersonPrefab;
 
-    private TileEntity[] _workTileTypes;
-
     // Start is called before the first frame update
     void Start()
     {
         Instance = this;
-        _workTileTypes = new TileEntity[] { TileEntity.LumberjackShack };
         Grid = new CityGrid(width, height);
         InitializeIsland();
     }
@@ -84,6 +81,6 @@ public class SimulationCore : MonoBehaviour
 
     public List<Point> GetNearestWorkBuilding(Person person)
     {
-        return Grid.GetClosestBuildingsOfTypes(person.Home, _workTileTypes, 50);
+        return Grid.GetClosestBuildingsOfTypes(person.Home, GameSettings.WorkBuildings, 50);
     }
 }

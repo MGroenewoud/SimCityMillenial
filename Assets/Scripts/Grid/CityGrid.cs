@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class CityGrid
 {
-
     private TileEntity[,] _grid;
     
     public int Width { get { return _width; } }
@@ -55,7 +54,7 @@ public class CityGrid
 
     public List<Point> GetAdjacentCellsOfType(Point cell, TileEntity type)
     {
-        List<Point> adjacentCells = GetAllAdjacentCells(cell);
+        var adjacentCells = GetAllAdjacentCells(cell);
         for (int i = adjacentCells.Count - 1; i >= 0; i--)
         {
             if (_grid[adjacentCells[i].X, adjacentCells[i].Y] != type)
@@ -65,7 +64,6 @@ public class CityGrid
         }
         return adjacentCells;
     }
-
 
     public List<Point> GetClosestBuildingsOfTypes(Point origin, TileEntity[] types, int range)
     {
@@ -103,7 +101,7 @@ public class CityGrid
     {
         var x = cell.X;
         var y = cell.Y;
-        List<Point> adjacentCells = new List<Point>();
+        var adjacentCells = new List<Point>();
         
         if (x > 0)
             adjacentCells.Add(new Point(x - 1, y));
@@ -115,5 +113,29 @@ public class CityGrid
             adjacentCells.Add(new Point(x, y + 1));
 
         return adjacentCells;
+    }
+
+    public Point[] GetAllPointsInbetween(Point pointA, Point pointB)
+    {
+        var allPoints = new List<Point>();
+
+        var minX = Math.Min(pointA.X, pointB.X);
+        var maxX = Math.Max(pointA.X, pointB.X);
+        var minY = Math.Min(pointA.Y, pointB.Y);
+        var maxY = Math.Max(pointA.Y, pointB.Y);
+
+        Debug.Log("X: " + minX + " -> " + maxX);
+        Debug.Log("Y: " + minY + " -> " + maxY);
+        Debug.Log("-----------------");
+
+        for (int x = minX; x < maxX+1; x++)
+        {
+            for (int y = minY; y < maxY+1; y++)
+            {
+                allPoints.Add(new Point(x,y));
+            }
+        }
+
+        return allPoints.ToArray();
     }
 }

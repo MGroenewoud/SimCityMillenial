@@ -8,8 +8,11 @@ public class TilePreviewComponent : MonoBehaviour
     private TileSelector CurrentTileSelector;
     private Tilemap DestinationLayer;
 
-    private bool _previewMode = false;
-    private HashSet<Point> _previewTiles = new HashSet<Point>();
+    private Point[] _previewTiles = new Point[] { };
+    private Vector3Int MousePosition;
+    private Point OriginPosition;
+
+    private bool _previewMode;
 
     public void SetTileSelector(TileSelector selector)
     {
@@ -27,20 +30,20 @@ public class TilePreviewComponent : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                if(CurrentTileSelector.Entity == TileEntity.Road)
+                if (!_previewMode)
+                {
+                    OriginPosition = GeneralUtility.GetGridLocationOfMouse();
+                    MousePosition = OriginPosition.AsVector3Int();
+                    _previewTiles = new Point[] { MousePosition.AsPoint() };
                     _previewMode = true;
+                }
             }
-            else if (Input.GetMouseButtonUp(0) && CurrentTileSelector.delay < Time.time)
+            else if (Input.GetMouseButtonUp(0) && CurrentTileSelector.delay < Time.time && _previewMode)
             {
-                var mousePos = GeneralUtility.GetMousePosition();
-                var position = DestinationLayer.WorldToCell(mousePos);
-                if(_previewMode)
-                    CurrentTileSelector.PlaceTiles(DestinationLayer, _previewTiles);
-                else
-                    CurrentTileSelector.PlaceTile(DestinationLayer, position.AsPoint());
+                CurrentTileSelector.PlaceTiles(DestinationLayer, _previewTiles);
                 _previewMode = false;
                 DestinationLayer.ClearAllEditorPreviewTiles();
-                _previewTiles.Clear();
+                _previewTiles = new Point[] { };
 
             }
             else if (Input.GetKey(KeyCode.Escape))
@@ -55,20 +58,87 @@ public class TilePreviewComponent : MonoBehaviour
         CurrentTileSelector = null;
         _previewMode = false;
         DestinationLayer.ClearAllEditorPreviewTiles();
-        _previewTiles.Clear();
+        _previewTiles = new Point[] { };
     }
 
     private void UpdatePreview()
     {
         var cellPos = DestinationLayer.WorldToCell(GeneralUtility.GetMousePosition());
-        if (!DestinationLayer.HasEditorPreviewTile(cellPos) || _previewMode)
+        MousePosition = cellPos;
+        if (_previewMode)
         {
-            if (_previewMode)
-                _previewTiles.Add(cellPos.AsPoint());
-            else
+            if (cellPos.AsPoint() != OriginPosition)
+            {
                 DestinationLayer.ClearAllEditorPreviewTiles();
-
-            DestinationLayer.SetEditorPreviewTile(cellPos, CurrentTileSelector.GetPreviewTile());
+                switch (CurrentTileSelector.PreviewMode)
+                {
+                    case PreviewModeType.Line:
+                        ShowLineTilePreview();
+                        break;
+                    case PreviewModeType.SquareOutline:
+                        ShowSquareOutlinePreview();
+                        break;
+                    case PreviewModeType.SquareFull:
+                        ShowFullSquarePreview();
+                        break;
+                }
+            }
+        }
+        else
+        {
+            ShowSingleTilePreview();
         }
     }
+
+    private void ShowFullSquarePreview()
+    {
+        _previewTiles = SimulationCore.Instance.Grid.GetAllPointsInbetween(OriginPosition, MousePosition.AsPoint());
+        SetPreviewTiles(_previewTiles);
+    }
+
+    private void ShowSquareOutlinePreview()
+    {
+        var path = GridSearch.AStarSearch(OriginPosition, MousePosition.AsPoint(), GameSettings.WalkableTiles);
+        var pathReverse = GridSearch.AStarSearch(MousePosition.AsPoint(), OriginPosition, GameSettings.WalkableTiles);
+
+        while(pathReverse.Count != 0)
+        {
+            path.Push(pathReverse.Pop()); 
+        }
+
+        _previewTiles = path.ToArray();
+        SetPreviewTiles(path);
+    }
+
+    private void ShowLineTilePreview()
+    {
+        _previewTiles = GridSearch.AStarSearch(OriginPosition, MousePosition.AsPoint(), GameSettings.WalkableTiles).ToArray();
+        SetPreviewTiles(_previewTiles);
+    }
+
+    private void ShowSingleTilePreview()
+    {
+        if (!DestinationLayer.HasEditorPreviewTile(MousePosition))
+        {
+            DestinationLayer.ClearAllEditorPreviewTiles();
+
+            DestinationLayer.SetEditorPreviewTile(MousePosition, CurrentTileSelector.GetPreviewTile());
+        }
+    }
+
+    private void SetPreviewTiles(IEnumerable<Point> points)
+    {
+        foreach (var p in points)
+        {
+            DestinationLayer.SetEditorPreviewTile(p.AsVector3Int(), CurrentTileSelector.GetPreviewTile());
+        }
+    }
+}
+
+public enum PreviewModeType
+{
+    Single,
+    Line,
+    SquareOutline,
+    SquareFull,
 }
