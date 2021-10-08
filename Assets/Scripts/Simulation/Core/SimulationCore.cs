@@ -8,9 +8,16 @@ public class SimulationCore : MonoBehaviour
     public static SimulationCore Instance;
     public CityGrid Grid;
 
-    public int width, height;
-    public GameObject Dot;
-    public Person PersonPrefab;
+    public List<Home> AllHomes = new List<Home>();
+
+    public Dictionary<ResourceType, int> Resources = new Dictionary<ResourceType, int>();
+
+    [SerializeField]
+    private int width, height;
+    [SerializeField]
+    private GameObject Dot;
+    [SerializeField]
+    private Person PersonPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +25,12 @@ public class SimulationCore : MonoBehaviour
         Instance = this;
         Grid = new CityGrid(width, height);
         InitializeIsland();
+        InitializeResources();
+    }
+
+    private void InitializeResources()
+    {
+        Resources.Add(ResourceType.Wood, 10);
     }
 
     private void InitializeIsland()
@@ -45,14 +58,21 @@ public class SimulationCore : MonoBehaviour
 
     private void CheckIfNewPersonNeedsToSpawn()
     {
-        if (Grid.AllGridEntities[TileEntity.Home].Count > Person.People.Count)
+        var homesNotAtCapacity = AllHomes.Where(h => h.HasSpaceForInhabitant);
+        if (homesNotAtCapacity.Any())
         {
-            var home = Grid.AllGridEntities[TileEntity.Home].Last();
-            var newPerson = Instantiate(PersonPrefab, GeneralUtility.GetLocalCenterOfCell(home), Quaternion.identity);
-            newPerson.Home = home;
+            var home = homesNotAtCapacity.First();
+            var newPerson = Instantiate(PersonPrefab, GeneralUtility.GetLocalCenterOfCell(home.Location), Quaternion.identity);
+            home.AddNewInhabitant(newPerson);
         }
     }
-    
+
+    internal void DetractResources(ResourceType costType, int costAmount)
+    {
+        Resources[costType] -= costAmount;
+        Debug.Log(Resources[costType]);
+    }
+
     public List<Point> GetNearestBuildingOfType(NeedType need, Person person)
     {
         var type = TileEntity.Home;

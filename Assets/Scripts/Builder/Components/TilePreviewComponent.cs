@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Zenject;
 
 public class TilePreviewComponent : MonoBehaviour
 {
@@ -13,12 +14,14 @@ public class TilePreviewComponent : MonoBehaviour
     private Point OriginPosition;
 
     private bool _previewMode;
+    private IGridSearch GridSearch;
 
-    public void SetTileSelector(TileSelector selector)
+    // TODO: Move these previewmodes into their own classes instead of this clumsy switch/if statements. Much cleaner.
+
+    [Inject]
+    public void Construct(IGridSearch _gridSearch)
     {
-        DestinationLayer = GeneralUtility.GetTilemap(selector.Layer);
-        ClearTileSelector();
-        CurrentTileSelector = selector;
+        GridSearch = _gridSearch;
     }
 
     // Update is called once per frame
@@ -40,10 +43,16 @@ public class TilePreviewComponent : MonoBehaviour
             }
             else if (Input.GetMouseButtonUp(0) && CurrentTileSelector.delay < Time.time && _previewMode)
             {
-                CurrentTileSelector.PlaceTiles(DestinationLayer, _previewTiles);
-                _previewMode = false;
-                DestinationLayer.ClearAllEditorPreviewTiles();
-                _previewTiles = new Point[] { };
+                if (CurrentTileSelector.CanAfford())
+                {
+                    CurrentTileSelector.PlaceTiles(DestinationLayer, _previewTiles);
+                    _previewMode = false;
+                    DestinationLayer.ClearAllEditorPreviewTiles();
+                    _previewTiles = new Point[] { };
+                }else
+                {
+                    Debug.Log("Can't afford this tile.");
+                }
 
             }
             else if (Input.GetKey(KeyCode.Escape))
@@ -51,6 +60,13 @@ public class TilePreviewComponent : MonoBehaviour
                 ClearTileSelector();
             }
         }
+    }
+
+    public void SetTileSelector(TileSelector selector)
+    {
+        DestinationLayer = GeneralUtility.GetTilemap(selector.Layer);
+        ClearTileSelector();
+        CurrentTileSelector = selector;
     }
 
     private void ClearTileSelector()
@@ -65,7 +81,7 @@ public class TilePreviewComponent : MonoBehaviour
     {
         var cellPos = DestinationLayer.WorldToCell(GeneralUtility.GetMousePosition());
         MousePosition = cellPos;
-        if (_previewMode)
+        if (_previewMode && CurrentTileSelector.PreviewMode != PreviewModeType.TwoByTwo)
         {
             if (cellPos.AsPoint() != OriginPosition)
             {
@@ -118,7 +134,26 @@ public class TilePreviewComponent : MonoBehaviour
 
     private void ShowSingleTilePreview()
     {
-        if (!DestinationLayer.HasEditorPreviewTile(MousePosition))
+        if (CurrentTileSelector.PreviewMode == PreviewModeType.TwoByTwo)
+        {
+            DestinationLayer.ClearAllEditorPreviewTiles();
+
+            _previewTiles = new Point[]
+            {
+                MousePosition.AsPoint(),
+                (MousePosition + Vector3Int.up).AsPoint(),
+                (MousePosition + Vector3Int.right).AsPoint(),
+                (MousePosition + Vector3Int.up + Vector3Int.right).AsPoint(),
+            };
+
+            DestinationLayer.SetEditorPreviewTile(_previewTiles[0].AsVector3Int(), CurrentTileSelector.GetPreviewTile(0));
+            DestinationLayer.SetEditorPreviewTile(_previewTiles[1].AsVector3Int(), CurrentTileSelector.GetPreviewTile(1));
+            DestinationLayer.SetEditorPreviewTile(_previewTiles[2].AsVector3Int(), CurrentTileSelector.GetPreviewTile(2));
+            DestinationLayer.SetEditorPreviewTile(_previewTiles[3].AsVector3Int(), CurrentTileSelector.GetPreviewTile(3));
+
+        } else 
+        if (CurrentTileSelector.PreviewMode != PreviewModeType.TwoByTwo &&
+            !DestinationLayer.HasEditorPreviewTile(MousePosition))
         {
             DestinationLayer.ClearAllEditorPreviewTiles();
 
@@ -141,4 +176,5 @@ public enum PreviewModeType
     Line,
     SquareOutline,
     SquareFull,
+    TwoByTwo,
 }

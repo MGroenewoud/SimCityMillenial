@@ -2,15 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public static class TilePlacementRuleProcessor
+public interface ITilePlacementRuleProcessor
 {
-    public static Dictionary<TilePlacementRule, Func<bool>> RuleLibrary;
+    public bool CanBePlaced(TileEntity entity, Point target);
+}
 
-    private static bool IsInitialized = false;
+public class TilePlacementRuleProcessor : ITilePlacementRuleProcessor
+{
+    public Dictionary<TilePlacementRule, Func<bool>> RuleLibrary;
 
-    private static Point Target;
+    private bool IsInitialized = false;
 
-    public static bool CanBePlaced(TileEntity entity, Point target)
+    private Point Target;
+    private IGridSearch GridSearch;
+
+    public TilePlacementRuleProcessor(IGridSearch _gridSearch)
+    {
+        GridSearch = _gridSearch;
+    }
+
+    public bool CanBePlaced(TileEntity entity, Point target)
     {
         Target = target;
         if (!IsInitialized)
@@ -18,7 +29,7 @@ public static class TilePlacementRuleProcessor
         return PassesRules(entity.GetRulesFromEntity());
     }
 
-    private static void Initialize()
+    private void Initialize()
     {
         RuleLibrary = new Dictionary<TilePlacementRule, Func<bool>>() {
             { TilePlacementRule.MustBePlacedNextToRoad, () => MustBePlacedAdjacentToTileType(TileEntity.Road) },
@@ -29,7 +40,7 @@ public static class TilePlacementRuleProcessor
         };
     }
 
-    private static bool PassesRules(TilePlacementRule[] ruleTypes)
+    private bool PassesRules(TilePlacementRule[] ruleTypes)
     {
         foreach(var ruleType in ruleTypes)
         {
@@ -42,30 +53,19 @@ public static class TilePlacementRuleProcessor
         return true;
     }
 
-    private static bool MustBePlacedAdjacentToTileType(TileEntity type)
+    private bool MustBePlacedAdjacentToTileType(TileEntity type)
     {
         return SimulationCore.Instance.Grid.GetAdjacentCellsOfType(Target, type).Any();
     }
 
-    private static bool MustBePlacedOn(TileEntity type)
+    private bool MustBePlacedOn(TileEntity type)
     {
         return SimulationCore.Instance.Grid[Target.X, Target.Y] == type;
     }
 
-    private static bool MustBePlacedCloseTo(TileEntity type)
+    private bool MustBePlacedCloseTo(TileEntity type)
     {
         return GridSearch.DijkstraHasEntitiesInRange(Target, type, 4);
-    }
-
-    private static TilePlacementRule[] GetRulesFromEntity(this TileEntity enumValue)
-    {
-        //Look for DescriptionAttributes on the enum field
-        object[] attr = enumValue.GetType().GetField(enumValue.ToString())
-            .GetCustomAttributes(typeof(PlacementRuleAttribute), false);
-
-        if (attr.Length > 0) // a DescriptionAttribute exists; use it
-            return ((PlacementRuleAttribute)attr[0]).Types;
-        return new TilePlacementRule[] { };
     }
 }
 

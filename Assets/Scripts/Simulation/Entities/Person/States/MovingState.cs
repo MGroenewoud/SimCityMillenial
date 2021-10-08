@@ -5,10 +5,12 @@ using UnityEngine;
 public class MovingState : PersonState
 {
     private NeedType DestinationNeedType;
+    private IGridSearch GridSearch;
 
-    public MovingState(Person person) : base(person.gameObject)
+    public MovingState(Person person, IGridSearch _gridSearch) : base(person.gameObject)
     {
         _person = person;
+        GridSearch = _gridSearch;
     }
 
     public override void OnStateEnter()

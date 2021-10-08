@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class Person : MonoBehaviour
 {
@@ -17,6 +18,14 @@ public class Person : MonoBehaviour
     public StateMachine StateMachine;
     public PersonInventory Inventory;
 
+    private IGridSearch GridSearch;
+
+    [Inject]
+    public void Construct(IGridSearch _gridSearch)
+    {
+        GridSearch = _gridSearch;
+    }
+
     void Awake()
     {
         Needs = GetComponent<PersonNeeds>();
@@ -25,7 +34,7 @@ public class Person : MonoBehaviour
         Inventory = GetComponent<PersonInventory>();
 
         InitializeNeeds();
-        InitializeStateMachine();
+        InitializeStateMachine(GridSearch);
 
         CurrentPosition = GeneralUtility.MainGrid.LocalToCell(transform.position).AsPoint();
         
@@ -44,13 +53,13 @@ public class Person : MonoBehaviour
         GetComponent<PersonNeeds>().SetNeeds(needs);
     }
 
-    private void InitializeStateMachine()
+    private void InitializeStateMachine(IGridSearch _gridSearch)
     {
         var states = new Dictionary<Type, PersonState>
         {
-            { typeof(MovingState), new MovingState(this) },
-            { typeof(RestingState), new RestingState(this) },
-            { typeof(WorkingState), new WorkingState(this) },
+            { typeof(MovingState), new MovingState(this, _gridSearch) },
+            { typeof(RestingState), new RestingState(this, _gridSearch) },
+            { typeof(WorkingState), new WorkingState(this, _gridSearch) },
         };
         GetComponent<StateMachine>().SetStates(states);
     }

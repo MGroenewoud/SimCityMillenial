@@ -11,9 +11,12 @@ public class WorkingState : PersonState
     private float HarvestRate = 1f;
     private float NextHarvestTick = 0f;
 
-    public WorkingState(Person person) : base(person.gameObject)
+    private IGridSearch GridSearch;
+
+    public WorkingState(Person person, IGridSearch _gridSearch) : base(person.gameObject)
     {
         _person = person;
+        GridSearch = _gridSearch;
     }
 
     public override void OnStateEnter()

@@ -27,6 +27,7 @@ public enum TileEntity
     HerdingShed = 1004,
     [PlacementRule(TilePlacementRule.PlacedOnEmptyTile, TilePlacementRule.MustBePlacedNextToRoad, TilePlacementRule.MustBePlacedNextToFarmDirt)]
     FarmShack = 1005,
+    Market = 1006,
 
 
 

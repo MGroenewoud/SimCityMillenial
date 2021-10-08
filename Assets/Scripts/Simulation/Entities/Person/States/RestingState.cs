@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class RestingState : PersonState
 {
+    private IGridSearch GridSearch;
 
-    public RestingState(Person person) : base(person.gameObject)
+    public RestingState(Person person, IGridSearch _gridSearch) : base(person.gameObject)
     {
         _person = person;
+        GridSearch = _gridSearch;
     }
 
     public override Type Tick()

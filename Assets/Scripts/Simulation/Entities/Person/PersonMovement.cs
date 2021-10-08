@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zenject;
 
 public class PersonMovement : MonoBehaviour
 {
@@ -9,6 +10,13 @@ public class PersonMovement : MonoBehaviour
     public Vector3 CurrentMoveTarget;
 
     private Person _person;
+    private IGridSearch GridSearch;
+
+    [Inject]
+    public void Construct(IGridSearch _gridSearch)
+    {
+        GridSearch = _gridSearch;
+    }
 
     private void Awake()
     {
@@ -22,7 +30,7 @@ public class PersonMovement : MonoBehaviour
         FacePosition(_person.Movement.CurrentMoveTarget);
     }
 
-        public void FacePosition(Vector3 target)
+    public void FacePosition(Vector3 target)
     {
         var delta = GeneralUtility.MainGrid.LocalToCell(target) - GeneralUtility.MainGrid.LocalToCell(transform.position);
         var direction = Direction.All.FirstOrDefault(d => d.Item1 == delta);

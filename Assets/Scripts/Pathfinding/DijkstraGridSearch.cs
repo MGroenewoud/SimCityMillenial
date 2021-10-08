@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public partial class GridSearch
+public partial class GridSearch : IGridSearch
 {
-    public static HashSet<Point> DijkstraGetEntitiesInRange(Point origin, TileEntity entity, int range)
+    public HashSet<Point> DijkstraGetEntitiesInRange(Point origin, TileEntity entity, int range)
     {
         var visited = new HashSet<Point>() { origin };
         var pointsOfInterest = new HashSet<Point>() { origin };
@@ -31,7 +31,7 @@ public partial class GridSearch
         return matches;
     }
 
-    public static bool DijkstraHasEntitiesInRange(Point origin, TileEntity entity, int range)
+    public bool DijkstraHasEntitiesInRange(Point origin, TileEntity entity, int range)
     {
         return DijkstraGetEntitiesInRange(origin, entity, range).Any();
     }

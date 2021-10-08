@@ -2,18 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+public interface IGridSearch
+{
+    public Stack<Point> AStarSearch(Point startPosition, Point endPosition, TileEntity[] walkableTiles = null);
+    public Stack<Point> AStarSearch(Point startPosition, List<Point> pointsInRange);
+    public Stack<Point> GeneratePath(Dictionary<Point, Point> parentMap, Point endState);
+    public HashSet<Point> DijkstraGetEntitiesInRange(Point origin, TileEntity entity, int range);
+    public bool DijkstraHasEntitiesInRange(Point origin, TileEntity entity, int range);
+}
+
 /// <summary>
 /// Source https://github.com/lordjesus/Packt-Introduction-to-graph-algorithms-for-game-developers
 /// </summary>
-public partial class GridSearch
+public partial class GridSearch : IGridSearch
 {
-
     public struct SearchResult
     {
         public List<Point> Path { get; set; }
     }
 
-    public static Stack<Point> AStarSearch(Point startPosition, Point endPosition, TileEntity[] walkableTiles = null)
+    public Stack<Point> AStarSearch(Point startPosition, Point endPosition, TileEntity[] walkableTiles = null)
     {
         var grid = SimulationCore.Instance.Grid;
         var path = new Stack<Point>();
@@ -28,7 +36,7 @@ public partial class GridSearch
         costDictionary.Add(startPosition, 0);
         parentsDictionary.Add(startPosition, null);
 
-        if(walkableTiles == null)
+        if (walkableTiles == null)
         {
             walkableTiles = GameSettings.RoadTiles;
         }
@@ -64,11 +72,11 @@ public partial class GridSearch
         return path;
     }
 
-    public static Stack<Point> AStarSearch(Point startPosition, List<Point> pointsInRange)
+    public Stack<Point> AStarSearch(Point startPosition, List<Point> pointsInRange)
     {
         var closest = new Stack<Point>();
 
-        foreach(var potentialMatch in pointsInRange)
+        foreach (var potentialMatch in pointsInRange)
         {
             var path = AStarSearch(startPosition, potentialMatch);
             if ((closest.Count == 0 || path.Count < closest.Count) && path.Count != 0)
@@ -77,8 +85,18 @@ public partial class GridSearch
 
         return closest;
     }
-
-    private static Point GetClosestVertex(List<Point> list, Dictionary<Point, float> distanceMap)
+    public Stack<Point> GeneratePath(Dictionary<Point, Point> parentMap, Point endState)
+    {
+        Stack<Point> path = new Stack<Point>();
+        Point parent = endState;
+        while (parent != null && parentMap.ContainsKey(parent))
+        {
+            path.Push(parent);
+            parent = parentMap[parent];
+        }
+        return path;
+    }
+    private Point GetClosestVertex(List<Point> list, Dictionary<Point, float> distanceMap)
     {
         Point candidate = list[0];
         foreach (Point vertex in list)
@@ -91,20 +109,9 @@ public partial class GridSearch
         return candidate;
     }
 
-    private static float ManhattanDiscance(Point endPos, Point point)
+    private float ManhattanDiscance(Point endPos, Point point)
     {
         return Math.Abs(endPos.X - point.X) + Math.Abs(endPos.Y - point.Y);
     }
 
-    public static Stack<Point> GeneratePath(Dictionary<Point, Point> parentMap, Point endState)
-    {
-        Stack<Point> path = new Stack<Point>();
-        Point parent = endState;
-        while (parent != null && parentMap.ContainsKey(parent))
-        {
-            path.Push(parent);
-            parent = parentMap[parent];
-        }
-        return path;
-    }
 }

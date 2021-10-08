@@ -41,3 +41,17 @@ public static class Extensions
         return list[randomNumber];
     }
 }
+
+public static class EntityExtensions
+{
+    public static TilePlacementRule[] GetRulesFromEntity(this TileEntity enumValue)
+    {
+        //Look for DescriptionAttributes on the enum field
+        object[] attr = enumValue.GetType().GetField(enumValue.ToString())
+            .GetCustomAttributes(typeof(PlacementRuleAttribute), false);
+
+        if (attr.Length > 0) // a DescriptionAttribute exists; use it
+            return ((PlacementRuleAttribute)attr[0]).Types;
+        return new TilePlacementRule[] { };
+    }
+}
