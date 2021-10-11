@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class StateMachine : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class StateMachine : MonoBehaviour
     {
         if(CurrentState == null)
         {
-            CurrentState = _allStates[typeof(RestingState)];
+            CurrentState = _allStates[typeof(WanderState)];
         }
 
         var nextState = CurrentState.Tick();

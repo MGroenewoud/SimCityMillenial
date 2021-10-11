@@ -47,7 +47,7 @@ public class TileSelector : MonoBehaviour
             
             SimulationCore.Instance.Grid[position.X, position.Y] = Entity;
 
-            OnPlaced();
+            OnPlaced(position);
         } else
         {
             Debug.Log("Can't be placed there.");
@@ -82,7 +82,7 @@ public class TileSelector : MonoBehaviour
         return RulesProcessor.CanBePlaced(Entity, p);
     }
 
-    public virtual void OnPlaced() { }
+    public virtual void OnPlaced(Point placementLocation) { }
 
     private void OnMouseUp()
     {

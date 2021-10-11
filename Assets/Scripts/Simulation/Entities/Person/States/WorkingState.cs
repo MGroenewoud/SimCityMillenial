@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 
 public class WorkingState : PersonState
@@ -11,19 +12,16 @@ public class WorkingState : PersonState
     private float HarvestRate = 1f;
     private float NextHarvestTick = 0f;
 
-    private IGridSearch GridSearch;
-
-    public WorkingState(Person person, IGridSearch _gridSearch) : base(person.gameObject)
+    public WorkingState(Person person) : base(person.gameObject)
     {
         _person = person;
-        GridSearch = _gridSearch;
     }
 
     public override void OnStateEnter()
     {
         State = WorkState.MoveToResource;
         WorkBase = _person.CurrentPosition;
-        WorkSpot = SimulationCore.Instance.Grid.GetClosestBuildingOfType(WorkBase, TileEntity.Forest, 10).RandomItem();
+        WorkSpot = SimulationCore.Instance.Grid.GetClosestBuildingOfType(WorkBase, TileEntity.Forest, 10).ToList().RandomItem();
         _person.Movement.GeneratePath(WorkBase, WorkSpot, GameSettings.WalkableTiles);
     }
 
@@ -58,7 +56,7 @@ public class WorkingState : PersonState
 
     private void DoingWork()
     {
-        if(NextHarvestTick < Time.time)
+        if (NextHarvestTick < Time.time)
         {
             _person.Inventory.AddItem(ItemType.Wood, 1);
             if (_person.Inventory.BagIsFull)

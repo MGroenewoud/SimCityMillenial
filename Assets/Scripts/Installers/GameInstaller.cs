@@ -11,5 +11,9 @@ public class GameInstaller : MonoInstaller
         Container.Bind<ITilePlacementRuleProcessor>()
             .To<TilePlacementRuleProcessor>()
             .AsSingle();
+
+        Container.Bind<IPersonService>()
+            .To<PersonService>()
+            .AsSingle();
     }
 }

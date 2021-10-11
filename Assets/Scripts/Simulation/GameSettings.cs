@@ -15,3 +15,10 @@ public static class GameSettings
     public static TileEntity[] WalkableTiles = new TileEntity[] { TileEntity.Grass, TileEntity.Road };
     public static TileEntity[] WorkBuildings = new TileEntity[] { TileEntity.LumberjackShack, TileEntity.HerdingShed, TileEntity.FarmShack };
 }
+
+public static class PersonSettings
+{
+    public static int WorkRange = 10;
+    public static int MarketRange = 20;
+    public static float TryFindHomeDelay = 5f;
+}

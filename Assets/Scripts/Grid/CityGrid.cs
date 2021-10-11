@@ -54,10 +54,15 @@ public class CityGrid
 
     public List<Point> GetAdjacentCellsOfType(Point cell, TileEntity type)
     {
+        return GetAdjacentCellsOfTypes(cell, new TileEntity[] { type });
+    }
+
+    public List<Point> GetAdjacentCellsOfTypes(Point cell, TileEntity[] types)
+    {
         var adjacentCells = GetAllAdjacentCells(cell);
         for (int i = adjacentCells.Count - 1; i >= 0; i--)
         {
-            if (_grid[adjacentCells[i].X, adjacentCells[i].Y] != type)
+            if (!types.Contains(_grid[adjacentCells[i].X, adjacentCells[i].Y]))
             {
                 adjacentCells.RemoveAt(i);
             }
@@ -65,21 +70,21 @@ public class CityGrid
         return adjacentCells;
     }
 
-    public List<Point> GetClosestBuildingsOfTypes(Point origin, TileEntity[] types, int range)
+    public HashSet<Point> GetClosestBuildingsOfTypes(Point origin, TileEntity[] types, int range)
     {
-        var buildingsOfType = new List<Point>();
+        var buildingsOfType = new HashSet<Point>();
 
         foreach(var type in types)
         {
-            buildingsOfType.AddRange(GetClosestBuildingOfType(origin, type, range));
+            buildingsOfType.UnionWith(GetClosestBuildingOfType(origin, type, range));
         }
 
         return buildingsOfType;
     }
 
-    public List<Point> GetClosestBuildingOfType(Point origin, TileEntity type, int range)
+    public HashSet<Point> GetClosestBuildingOfType(Point origin, TileEntity type, int range)
     {
-        var buildingsOfType = new List<Point>();
+        var buildingsOfType = new HashSet<Point>();
 
         foreach(var potential in AllGridEntities[type])
         {

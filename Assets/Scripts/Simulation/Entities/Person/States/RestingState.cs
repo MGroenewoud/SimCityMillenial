@@ -1,22 +1,21 @@
 using System;
-using System.Linq;
-using UnityEngine;
+using Zenject;
 
 public class RestingState : PersonState
 {
+    [Inject]
     private IGridSearch GridSearch;
 
-    public RestingState(Person person, IGridSearch _gridSearch) : base(person.gameObject)
+    public RestingState(Person person) : base(person.gameObject)
     {
         _person = person;
-        GridSearch = _gridSearch;
     }
 
     public override Type Tick()
     {
-        //if (_person.Needs.HasCriticalNeed())
-        return typeof(MovingState);
-        //return typeof(RestingState);
+        if(_person.Market != null && _person.Home != null && _person.Work != null)
+            return typeof(MovingState);
+        return typeof(WanderState);
     }
 
     public override string ToString()

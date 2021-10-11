@@ -11,20 +11,18 @@ public class Person : MonoBehaviour
     public static List<Person> People = new List<Person>();
 
     public Point CurrentPosition;
+
     public Point Home;
-    
+    public Point Work;
+    public Point Market;
+
     public PersonNeeds Needs;
     public PersonMovement Movement;
     public StateMachine StateMachine;
     public PersonInventory Inventory;
 
+    private IPersonService PersonService;
     private IGridSearch GridSearch;
-
-    [Inject]
-    public void Construct(IGridSearch _gridSearch)
-    {
-        GridSearch = _gridSearch;
-    }
 
     void Awake()
     {
@@ -34,11 +32,18 @@ public class Person : MonoBehaviour
         Inventory = GetComponent<PersonInventory>();
 
         InitializeNeeds();
-        InitializeStateMachine(GridSearch);
+        InitializeStateMachine();
 
         CurrentPosition = GeneralUtility.MainGrid.LocalToCell(transform.position).AsPoint();
         
         People.Add(this);
+    }
+
+    [Inject]
+    public void Construct(IPersonService _personService, IGridSearch _gridSearch)
+    {
+        PersonService = _personService;
+        GridSearch = _gridSearch;
     }
 
     private void InitializeNeeds()
@@ -53,13 +58,14 @@ public class Person : MonoBehaviour
         GetComponent<PersonNeeds>().SetNeeds(needs);
     }
 
-    private void InitializeStateMachine(IGridSearch _gridSearch)
+    private void InitializeStateMachine()
     {
         var states = new Dictionary<Type, PersonState>
         {
-            { typeof(MovingState), new MovingState(this, _gridSearch) },
-            { typeof(RestingState), new RestingState(this, _gridSearch) },
-            { typeof(WorkingState), new WorkingState(this, _gridSearch) },
+            { typeof(MovingState), new MovingState(this, GridSearch) },
+            { typeof(RestingState), new RestingState(this) },
+            { typeof(WorkingState), new WorkingState(this) },
+            { typeof(WanderState), new WanderState(this, PersonService, GridSearch) },
         };
         GetComponent<StateMachine>().SetStates(states);
     }

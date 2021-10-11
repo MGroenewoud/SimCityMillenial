@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class MarketTile : TileSelector
 {
-    public override void OnPlaced()
+    public override void OnPlaced(Point placementPosition)
     {
         Debug.Log("market placed");
 

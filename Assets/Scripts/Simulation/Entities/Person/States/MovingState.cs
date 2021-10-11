@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class MovingState : PersonState
 {
     private NeedType DestinationNeedType;
+
     private IGridSearch GridSearch;
 
     public MovingState(Person person, IGridSearch _gridSearch) : base(person.gameObject)
     {
-        _person = person;
         GridSearch = _gridSearch;
+        _person = person;
     }
 
     public override void OnStateEnter()
@@ -40,7 +40,6 @@ public class MovingState : PersonState
     private Type DestinationReached()
     {
         _person.Movement.PathToDestination = null;
-        _person.Movement.CurrentMoveTarget = Vector3.negativeInfinity;
         if (DestinationNeedType != NeedType.None)
             _person.Needs.Needs[DestinationNeedType].Weight = 0;
         return DestinationNeedType == NeedType.None ? typeof(WorkingState) : typeof(RestingState);
@@ -90,23 +89,17 @@ public class MovingState : PersonState
         }
         else if (DestinationNeedType == NeedType.None)
         {
-            var buildingsInRange = SimulationCore.Instance.Grid.GetClosestBuildingOfType(_person.Home, TileEntity.LumberjackShack, 50);
-
-            return GridSearch.AStarSearch(_person.CurrentPosition, buildingsInRange);
+            return GridSearch.AStarSearch(_person.CurrentPosition, _person.Work);
         }
         else
         {
-            var buildingsInRange = SimulationCore.Instance.GetNearestBuildingOfType(DestinationNeedType, _person);
-
-            return GridSearch.AStarSearch(_person.CurrentPosition, buildingsInRange);
+            return GridSearch.AStarSearch(_person.CurrentPosition, _person.Market);
         }
     }
 
     private Stack<Point> FindWorkPath()
     {
-        var workInRange = SimulationCore.Instance.GetNearestWorkBuilding(_person);
-
-        return GridSearch.AStarSearch(_person.CurrentPosition, workInRange);
+        return GridSearch.AStarSearch(_person.CurrentPosition, _person.Work);
     }
 
     public override string ToString()

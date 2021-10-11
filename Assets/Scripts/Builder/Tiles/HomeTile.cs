@@ -6,13 +6,11 @@ using UnityEngine.Tilemaps;
 
 public class HomeTile : TileSelector
 {
-    public override void OnPlaced()
+    public override void OnPlaced(Point placementLocation)
     {
         Debug.Log("home placed");
 
-        // Create new home object
-
-
+        SimulationCore.Instance.AllHomes.Add(placementLocation, new Home(placementLocation));
 
     }
 }

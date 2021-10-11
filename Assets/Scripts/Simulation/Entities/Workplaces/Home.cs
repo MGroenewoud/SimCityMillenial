@@ -13,6 +13,7 @@ public class Home
     public Home(Point location)
     {
         Location = location;
+        Inhabitants = new HashSet<Person>();
     }
 
     public void AddNewInhabitant(Person inhabitant)
