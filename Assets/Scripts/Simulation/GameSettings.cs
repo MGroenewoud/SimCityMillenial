@@ -18,7 +18,9 @@ public static class GameSettings
 
 public static class PersonSettings
 {
-    public static int WorkRange = 10;
-    public static int MarketRange = 20;
+    public static int WorkRange = 20;
+    public static int MarketRange = 30;
+    public static int FullWorkEfficiencyCutoff = 60;
+    public static int NoWorkEfficiencyCutoff = 120;    
     public static float TryFindHomeDelay = 5f;
 }

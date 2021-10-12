@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
 
 public class Home
 {
@@ -8,23 +6,23 @@ public class Home
     public bool HasSpaceForInhabitant => MaxOccupancy > Inhabitants.Count;
 
     private int MaxOccupancy = 2;
-    private HashSet<Person> Inhabitants;
+    private HashSet<Person> Inhabitants= new HashSet<Person>();
 
     public Home(Point location)
     {
         Location = location;
-        Inhabitants = new HashSet<Person>();
     }
 
     public void AddNewInhabitant(Person inhabitant)
     {
         Inhabitants.Add(inhabitant);
         inhabitant.Home = Location;
+        inhabitant.OnHomeChanged();
     }
 
     public void RemoveInhabitant(Person inhabitant)
     {
         Inhabitants.Remove(inhabitant);
-        // Probably do something here that finds the removed inhabitant a new home.
+        inhabitant.OnHomeChanged();
     }
 }

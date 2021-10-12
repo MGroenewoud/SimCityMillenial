@@ -1,63 +1,31 @@
-using System;
 using System.Text;
-using TMPro;
-using UnityEngine;
 
-public class PersonDetails : MonoBehaviour
+public class PersonDetails : IFocus
 {
-    private Person FocusedPerson;
-    private TextMeshProUGUI DetailsText;
+    private Person PersonFocus;
 
-    void Start()
+    public PersonDetails(Person _person)
     {
-        DetailsText = GetComponentInChildren<TextMeshProUGUI>(true);
-        gameObject.SetActive(false);
+        PersonFocus = _person;
     }
 
-    void Update()
-    {
-        if (Input.GetKey(KeyCode.Escape))
-        {
-            RemoveFocus();
-        } else
-        {
-            BuildDetails();
-        }
-    }
-
-    public void Focus(Person focus)
-    {
-        FocusedPerson = focus;
-        gameObject.SetActive(true);
-    }
-
-    public void RemoveFocus()
-    {
-        RemoveDetails();
-        gameObject.SetActive(false);
-    }
-
-    private void RemoveDetails()
-    {
-        DetailsText.text = "";
-    }
-
-    private void BuildDetails()
-    {
-        DetailsText.text = BuildNeeds();
-    }
-
-    private string BuildNeeds()
+    public string GetDetailsString()
     {
         var needs = new StringBuilder();
 
-        needs.AppendLine("State: " + FocusedPerson.StateMachine.ActiveState);
+        needs.AppendLine("State: " + PersonFocus.StateMachine.ActiveState);
 
-        foreach(var need in FocusedPerson.Needs.Needs)
+        foreach(var need in PersonFocus.Needs.Needs)
         {
             needs.AppendLine(string.Format("{0}: {1}", need.Key, need.Value.Weight));
         }
 
         return needs.ToString();
+    }
+
+    public void Focus(Person focus)
+    {
+        PersonFocus = focus;
+        GetDetailsString();
     }
 }

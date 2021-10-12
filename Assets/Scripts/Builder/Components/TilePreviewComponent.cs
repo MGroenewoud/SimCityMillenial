@@ -6,6 +6,8 @@ using Zenject;
 
 public class TilePreviewComponent : MonoBehaviour
 {
+    public bool HasSelection => CurrentTileSelector != null;
+
     private TileSelector CurrentTileSelector;
     private Tilemap DestinationLayer;
 

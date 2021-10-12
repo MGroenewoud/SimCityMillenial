@@ -21,6 +21,8 @@ public class Person : MonoBehaviour
     public StateMachine StateMachine;
     public PersonInventory Inventory;
 
+    public int WorkEfficiency = 0;
+
     private IPersonService PersonService;
     private IGridSearch GridSearch;
 
@@ -44,6 +46,12 @@ public class Person : MonoBehaviour
     {
         PersonService = _personService;
         GridSearch = _gridSearch;
+    }
+
+    public void OnHomeChanged()
+    {
+        // calculate efficiency
+        WorkEfficiency = PersonService.CalculateWorkEffiency(this);
     }
 
     private void InitializeNeeds()
@@ -72,7 +80,8 @@ public class Person : MonoBehaviour
 
     private void OnMouseUp()
     {
-        FindObjectOfType<PersonDetails>(true).Focus(this);
+        Debug.Log("set focus");
+        FindObjectOfType<DetailsPane>(true).SetFocus(new PersonDetails(this));
     }
 
 }

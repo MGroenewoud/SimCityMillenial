@@ -79,7 +79,6 @@ public class WorkingState : PersonState
         if (gameObject.transform.position.IsSamePositionAs((GeneralUtility.GetLocalCenterOfCell(WorkBase))))
         {
             var amount = _person.Inventory.RemoveItem(ItemType.Wood);
-            Debug.Log("Deposited " + amount + " wood.");
             if (_person.Needs.HasCriticalNeed())
             {
                 return typeof(MovingState);

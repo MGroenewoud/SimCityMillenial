@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Zenject;
 
 public interface IPersonService
 {
     bool FindHomeForPerson(Person person);
+    int CalculateWorkEffiency(Person person);
 }
 
 public class PersonService : IPersonService
@@ -19,14 +19,26 @@ public class PersonService : IPersonService
         GridSearch = _gridSearch;
     }
 
+    public int CalculateWorkEffiency(Person person)
+    {
+        var totalPath = person.Movement.HomeToMarketPath.Count + person.Movement.HomeToWorkPath.Count + person.Movement.WorkToMarketPath.Count;
+        if (totalPath <= PersonSettings.FullWorkEfficiencyCutoff)
+            return 100;
+        if (totalPath >= PersonSettings.NoWorkEfficiencyCutoff)
+            return 0;
+
+        var efficiencyRange = PersonSettings.NoWorkEfficiencyCutoff - PersonSettings.FullWorkEfficiencyCutoff;
+
+        return 100 - ((totalPath - PersonSettings.FullWorkEfficiencyCutoff) / efficiencyRange);
+    }
+
     public bool FindHomeForPerson(Person person)
     {
         // Find all empty homes
         var homesWithSpace = SimulationCore.Instance.AllHomes.Values.Where(h => h.HasSpaceForInhabitant);
         if (homesWithSpace.Any())
         {
-            Debug.Log(string.Format("Found {0} homes with space", homesWithSpace.Count()));
-
+            // Debug.Log(string.Format("Found {0} homes with space", homesWithSpace.Count()));
             // Filter homes by homes that have access to a market within range
             var homesWithMarketInRange = new HashSet<Point>();
 
@@ -46,13 +58,14 @@ public class PersonService : IPersonService
 
             if (homesWithMarketInRange.Any())
             {
-                Debug.Log(string.Format("Found {0} homes with market in range", homesWithMarketInRange.Count()));
-
+                // Debug.Log(string.Format("Found {0} homes with market in range", homesWithMarketInRange.Count()));
                 // If there are any empty houses, with markets in range, look for work within range
                 var homesWithMarketAndWorkInRange = new HashSet<Point>();
+                var workplacesWithCapacity = SimulationCore.Instance.AllWorkplaces.Values.Where(wp => wp.HasCapacity).Select(wp => wp.Location).ToList();
                 foreach (var home in homesWithMarketInRange)
                 {
                     var workPlaces = GridSearch.AStarSearchInRange(home, GameSettings.WorkBuildings, GameSettings.RoadTiles, PersonSettings.WorkRange);
+                    workPlaces = workPlaces.Where(wp => workplacesWithCapacity.Contains(wp.To)).ToList();
                     if (workPlaces.Any())
                     {
                         homesWithMarketAndWorkInRange.Add(home);
@@ -62,18 +75,21 @@ public class PersonService : IPersonService
 
                 if (homesWithMarketAndWorkInRange.Any())
                 {
-                    Debug.Log(string.Format("Found {0} homes with market AND work in range", homesWithMarketAndWorkInRange.Count()));
+                    // Debug.Log(string.Format("Found {0} homes with market AND work in range", homesWithMarketAndWorkInRange.Count()));
                     // We now have all homes with workplaces and markets within walking range
 
                     var pathsResult = CreateFullPathSearchResult(marketsInRangeOfHome, workInRangeOfHome);
 
                     var shortestPath = pathsResult.OrderBy(pr => pr.TotalSteps).First();
 
-                    SimulationCore.Instance.AllHomes[shortestPath.Home].AddNewInhabitant(person);
-                    person.Home = shortestPath.Home;
                     person.Work = shortestPath.Workplace;
                     person.Market = shortestPath.Market;
 
+                    person.Movement.SetPaths(shortestPath.HomeToMarket, shortestPath.HomeToWorkplace, shortestPath.WorkplaceToMarket);
+                    // Set home last, as it triggers a few functions that use the paths and positions set above.
+                    SimulationCore.Instance.AllHomes[shortestPath.Home].AddNewInhabitant(person);
+                    SimulationCore.Instance.AllWorkplaces[shortestPath.Workplace].AssignWorker(person);
+                    
                     return true;
                 }
             }

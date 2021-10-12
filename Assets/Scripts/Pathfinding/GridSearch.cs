@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -99,7 +100,7 @@ public partial class GridSearch : IGridSearch
                             From = from,
                             To = match,
                             Steps = path.Count,
-                            Path = path,
+                            Path = new Stack<Point>(path),
                         });
                     }
                     visited.UnionWith(neighbourMatches);

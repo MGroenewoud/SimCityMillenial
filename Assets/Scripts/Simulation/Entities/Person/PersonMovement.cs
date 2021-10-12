@@ -9,6 +9,10 @@ public class PersonMovement : MonoBehaviour
     public Stack<Point> PathToDestination;
     public Vector3 CurrentMoveTarget;
 
+    public Stack<Point> HomeToWorkPath;
+    public Stack<Point> HomeToMarketPath;
+    public Stack<Point> WorkToMarketPath;
+
     private Person _person;
     private IGridSearch GridSearch;
 
@@ -69,6 +73,13 @@ public class PersonMovement : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void SetPaths(GridSearchResult homeToMarket, GridSearchResult homeToWorkplace, GridSearchResult workplaceToMarket)
+    {
+        HomeToWorkPath = homeToWorkplace.Path;
+        HomeToMarketPath = homeToMarket.Path;
+        WorkToMarketPath = workplaceToMarket.Path;
     }
 }
 
