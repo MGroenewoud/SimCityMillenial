@@ -33,7 +33,8 @@ public class MapGenerator : MonoBehaviour
 
     internal void GenerateIsland(int gridsize, int scale)
     {
-        var heightMap = GenerateNoise(gridsize, scale);
+        var seed = UnityEngine.Random.Range(0, 1000000);
+        var heightMap = GenerateNoise(gridsize, scale, seed);
         var islandShape = GenerateSquareGradient(gridsize, gridsize);
         var resultMap = SubtractNoiseMaps(heightMap, islandShape);
 
@@ -49,9 +50,9 @@ public class MapGenerator : MonoBehaviour
     private TileBase GetTile(float v)
     {
         var tileType = Grass;
-        if (v < 0.2)
+        if (v < 0.15)
             tileType = Water;
-        else if (v > 0.8)
+        else if (v > 0.7)
         {
             var i = UnityEngine.Random.Range(0, Forest.Length);
             tileType = Forest[i];
@@ -60,7 +61,7 @@ public class MapGenerator : MonoBehaviour
         return tileType;
     }
 
-    public float[,] GenerateNoise(int sampleSize,  float scale)
+    public float[,] GenerateNoise(int sampleSize,  float scale, float seed)
     {
         float[,] noiseMap = new float[sampleSize, sampleSize];
 
@@ -71,7 +72,7 @@ public class MapGenerator : MonoBehaviour
                 float posX = (float)x / scale;
                 float posY = (float)y / scale;
 
-                noiseMap[x, y] = Mathf.PerlinNoise(posX, posY);
+                noiseMap[x, y] = Mathf.PerlinNoise(posX + seed, posY + seed);
             }
         }
 

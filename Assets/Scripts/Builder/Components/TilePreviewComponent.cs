@@ -51,7 +51,9 @@ public class TilePreviewComponent : MonoBehaviour
                     _previewMode = false;
                     DestinationLayer.ClearAllEditorPreviewTiles();
                     _previewTiles = new Point[] { };
-                }else
+
+                }
+                else
                 {
                     Debug.Log("Can't afford this tile.");
                 }
@@ -119,9 +121,9 @@ public class TilePreviewComponent : MonoBehaviour
         var path = GridSearch.AStarSearch(OriginPosition, MousePosition.AsPoint(), GameSettings.WalkableTiles);
         var pathReverse = GridSearch.AStarSearch(MousePosition.AsPoint(), OriginPosition, GameSettings.WalkableTiles);
 
-        while(pathReverse.Count != 0)
+        while (pathReverse.Count != 0)
         {
-            path.Push(pathReverse.Pop()); 
+            path.Push(pathReverse.Pop());
         }
 
         _previewTiles = path.ToArray();
@@ -153,7 +155,8 @@ public class TilePreviewComponent : MonoBehaviour
             DestinationLayer.SetEditorPreviewTile(_previewTiles[2].AsVector3Int(), CurrentTileSelector.GetPreviewTile(2));
             DestinationLayer.SetEditorPreviewTile(_previewTiles[3].AsVector3Int(), CurrentTileSelector.GetPreviewTile(3));
 
-        } else 
+        }
+        else
         if (CurrentTileSelector.PreviewMode != PreviewModeType.TwoByTwo &&
             !DestinationLayer.HasEditorPreviewTile(MousePosition))
         {

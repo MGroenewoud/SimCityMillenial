@@ -82,6 +82,5 @@ public class SimulationCore : MonoBehaviour
     internal void DetractResources(ResourceType costType, int costAmount)
     {
         Resources[costType] -= costAmount;
-        Debug.Log(Resources[costType]);
     }
 }

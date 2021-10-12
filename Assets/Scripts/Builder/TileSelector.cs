@@ -36,19 +36,9 @@ public class TileSelector : MonoBehaviour
     {
         if (CanPlace(position))
         {
-            if (PreviewMode == PreviewModeType.TwoByTwo)
-            {
-                layer.SetTile(position.AsVector3Int(), Tile[id]);
-            }
-            else
-            {
-                layer.SetTile(position.AsVector3Int(), GrabRandomTile());
-            }
-            
-            SimulationCore.Instance.Grid[position.X, position.Y] = Entity;
-
-            OnPlaced(position);
-        } else
+            PlaceTileOnMap(layer, position, id);
+        }
+        else
         {
             Debug.Log("Can't be placed there.");
         }
@@ -63,9 +53,16 @@ public class TileSelector : MonoBehaviour
     public void PlaceTiles(Tilemap destinationLayer, Point[] previewTiles)
     {
         int id = 0;
+
         foreach(var tile in previewTiles)
         {
-            PlaceTile(destinationLayer, tile, id);
+            if (!CanPlace(tile))
+                return;
+        }
+
+        foreach(var tile in previewTiles)
+        {
+            PlaceTileOnMap(destinationLayer, tile, id);
             id++;
         }
 
@@ -88,6 +85,22 @@ public class TileSelector : MonoBehaviour
     {
         delay = Time.time + 0.1f;
         Builder.Instance.Preview.SetTileSelector(this);
+    }
+
+    private void PlaceTileOnMap(Tilemap layer, Point position, int id)
+    {
+        if (PreviewMode == PreviewModeType.TwoByTwo)
+        {
+            layer.SetTile(position.AsVector3Int(), Tile[id]);
+        }
+        else
+        {
+            layer.SetTile(position.AsVector3Int(), GrabRandomTile());
+        }
+
+        SimulationCore.Instance.Grid[position.X, position.Y] = Entity;
+
+        OnPlaced(position);
     }
 
     private TileBase GrabRandomTile()

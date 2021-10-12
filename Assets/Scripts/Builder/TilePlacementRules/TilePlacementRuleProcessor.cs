@@ -32,11 +32,13 @@ public class TilePlacementRuleProcessor : ITilePlacementRuleProcessor
     private void Initialize()
     {
         RuleLibrary = new Dictionary<TilePlacementRule, Func<bool>>() {
-            { TilePlacementRule.MustBePlacedNextToRoad, () => MustBePlacedAdjacentToTileType(TileEntity.Road) },
+            { TilePlacementRule.MustBePlacedNextToRoad, () => PlacedAdjacentToTileType(TileEntity.Road) },
             { TilePlacementRule.PlacedOnEmptyTile, () => MustBePlacedOn(TileEntity.Grass) },
             { TilePlacementRule.MustBePlacedCloseToForest, () => MustBePlacedCloseTo(TileEntity.Forest) },
-            { TilePlacementRule.MustBePlacedNextToFence, () => MustBePlacedAdjacentToTileType(TileEntity.Fence) },
-            { TilePlacementRule.MustBePlacedNextToFarmDirt, () => MustBePlacedAdjacentToTileType(TileEntity.FarmDirt) },
+            { TilePlacementRule.MustBePlacedNextToFence, () => PlacedAdjacentToTileType(TileEntity.Fence) },
+            { TilePlacementRule.MustBePlacedNextToFarmDirt, () => PlacedAdjacentToTileType(TileEntity.FarmDirt) },
+            { TilePlacementRule.NotNextToOtherFence, () => !PlacedAdjacentToTileType(TileEntity.Fence) },
+            { TilePlacementRule.NotNextToOtherFarmDirt, () => !PlacedAdjacentToTileType(TileEntity.FarmDirt) },
         };
     }
 
@@ -53,7 +55,7 @@ public class TilePlacementRuleProcessor : ITilePlacementRuleProcessor
         return true;
     }
 
-    private bool MustBePlacedAdjacentToTileType(TileEntity type)
+    private bool PlacedAdjacentToTileType(TileEntity type)
     {
         return SimulationCore.Instance.Grid.GetAdjacentCellsOfType(Target, type).Any();
     }
@@ -76,6 +78,8 @@ public enum TilePlacementRule
     MustBePlacedCloseToForest,
     MustBePlacedNextToFence,
     MustBePlacedNextToFarmDirt,
+    NotNextToOtherFence,
+    NotNextToOtherFarmDirt,
 }
 
 public class PlacementRuleAttribute : Attribute

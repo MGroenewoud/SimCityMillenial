@@ -2215,7 +2215,7 @@ BoxCollider2D:
   m_Offset: {x: 0, y: -0.011538476}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.5, y: 0.511811}
     oldSize: {x: 1, y: 0.9621212}
     newSize: {x: 1.0230769, y: 0.97692305}
     adaptiveTilingThreshold: 0.5
@@ -2238,7 +2238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Layer: 0
-  Entity: 1000
+  Entity: 1005
   PreviewMode: 0
   delay: 0
   Tile:

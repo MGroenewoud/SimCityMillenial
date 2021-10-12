@@ -7,7 +7,7 @@ public enum TileEntity
     [PlacementRule(TilePlacementRule.PlacedOnEmptyTile)]
     Road = 1,
     Ocean = 2,
-    [PlacementRule(TilePlacementRule.PlacedOnEmptyTile)]
+    [PlacementRule(TilePlacementRule.PlacedOnEmptyTile, TilePlacementRule.NotNextToOtherFarmDirt)]
     FarmDirt = 3,
 
 
@@ -27,6 +27,7 @@ public enum TileEntity
     HerdingShed = 1004,
     [PlacementRule(TilePlacementRule.PlacedOnEmptyTile, TilePlacementRule.MustBePlacedNextToRoad, TilePlacementRule.MustBePlacedNextToFarmDirt)]
     FarmShack = 1005,
+    [PlacementRule(TilePlacementRule.PlacedOnEmptyTile, TilePlacementRule.MustBePlacedNextToRoad)]
     Market = 1006,
 
 
@@ -38,5 +39,6 @@ public enum TileEntity
 
 
     //Obstacles
+    [PlacementRule(TilePlacementRule.PlacedOnEmptyTile, TilePlacementRule.NotNextToOtherFence)]
     Fence = 3000,
 }
