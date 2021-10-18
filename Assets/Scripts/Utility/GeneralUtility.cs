@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
@@ -50,5 +51,20 @@ public static class GeneralUtility
         if (attr.Length > 0) // a DescriptionAttribute exists; use it
             return ((DescriptionAttribute)attr[0]).Description;
         return "";
+    }
+
+    public static HashSet<Point> GetCellsInsideRectangularShape(Point low, Point high)
+    {
+        var insideCells = new HashSet<Point>();
+
+        for (int x = low.X + 1; x < high.X; x++)
+        {
+            for (int y = low.Y + 1; y < high.Y; y++)
+            {
+                insideCells.Add(new Point(x,y));
+            }
+        }
+
+        return insideCells;
     }
 }

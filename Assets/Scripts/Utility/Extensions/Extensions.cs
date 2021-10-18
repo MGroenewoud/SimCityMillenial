@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -35,10 +34,10 @@ public static class Extensions
         return list == null || !list.Any();
     }
 
-    public static T RandomItem<T>(this IList<T> list)
+    public static T RandomItem<T>(this IEnumerable<T> list)
     {
         var randomNumber = Random.Range(0, list.Count());
-        return list[randomNumber];
+        return list.ToList()[randomNumber];
     }
 }
 
@@ -53,5 +52,18 @@ public static class EntityExtensions
         if (attr.Length > 0) // a DescriptionAttribute exists; use it
             return ((PlacementRuleAttribute)attr[0]).Types;
         return new TilePlacementRule[] { };
+    }
+
+    /// <summary>
+    /// This function assumes the set of tiles given, form a rectangle. This function will then trim the outer layer of that shape from the set.
+    /// </summary>
+    public static void GetInnerTiles(this HashSet<Point> tiles)
+    {
+        var minX = tiles.Min(t => t.X);
+        var minY = tiles.Min(t => t.Y);
+        var maxX = tiles.Max(t => t.X);
+        var maxY = tiles.Max(t => t.Y);
+        
+        tiles.RemoveWhere(t => t.X == minX || t.X == maxX || t.Y == minY || t.Y == maxY);
     }
 }

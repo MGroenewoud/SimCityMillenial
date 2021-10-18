@@ -12,7 +12,7 @@ public static class GameSettings
     public static int CriticalNeedFactor = 1000;
 
     public static TileEntity[] RoadTiles = new TileEntity[] { TileEntity.Road };
-    public static TileEntity[] WalkableTiles = new TileEntity[] { TileEntity.Grass, TileEntity.Road };
+    public static TileEntity[] WalkableTiles = new TileEntity[] { TileEntity.Grass, TileEntity.Road, TileEntity.FarmDirt, TileEntity.Forest };
     public static TileEntity[] WorkBuildings = new TileEntity[] { TileEntity.LumberjackShack, TileEntity.HerdingShed, TileEntity.FarmShack };
 }
 

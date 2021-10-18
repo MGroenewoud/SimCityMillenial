@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class FarmingShack : WorkPlaceBase
 {
+
+    public HashSet<Point> Farmland;
+
     public FarmingShack(Point location)
     {
         Location = location;
@@ -11,6 +14,7 @@ public class FarmingShack : WorkPlaceBase
         ResourceProduced = ResourceType.Food;
         Capacity = 4;
         ProductionRate = 1;
+        WorkState = typeof(FarmingState);
     }
 
     public override void UpdateProduction()

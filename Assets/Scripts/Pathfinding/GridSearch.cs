@@ -11,6 +11,7 @@ public interface IGridSearch
     public List<GridSearchResult> AStarSearchInRange(Point from, TileEntity[] entitiesToSearchFor, TileEntity[] walkableTiles, int maxRange);
     public Stack<Point> GeneratePath(Dictionary<Point, Point> parentMap, Point endState);
     public HashSet<Point> DijkstraGetEntitiesInRange(Point origin, TileEntity entity, int range);
+    public HashSet<Point> FindConnectingTilesOfType(Point origin, TileEntity entity);
     public bool DijkstraHasEntitiesInRange(Point origin, TileEntity entity, int range);
 }
 
@@ -122,6 +123,27 @@ public partial class GridSearch : IGridSearch
 
 
         return searchResults;
+    }
+
+    public HashSet<Point> FindConnectingTilesOfType(Point origin, TileEntity entity)
+    {
+        var connectingEntities = new HashSet<Point>();
+        var tilesToCheck = new HashSet<Point>() { origin };
+
+        while (tilesToCheck.Any())
+        {
+            var newTiles = new HashSet<Point>();
+            foreach(var tile in tilesToCheck)
+            {
+                var newNeighbours = SimulationCore.Instance.Grid.GetAdjacentCellsOfType(tile, entity).Except(connectingEntities);
+                newTiles.UnionWith(newNeighbours);
+            }
+
+            connectingEntities.UnionWith(newTiles);
+            tilesToCheck = newTiles;
+        }
+
+        return connectingEntities;
     }
 
     public List<GridSearchResult> AStarSearch(Point startPosition, HashSet<Point> pointsInRange)

@@ -2234,7 +2234,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1582167449}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19930c7365a1e0640b9e2746d4669f7b, type: 3}
+  m_Script: {fileID: 11500000, guid: f3af9c3c150435e439bce24fc16c5f0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Layer: 0
@@ -2242,7 +2242,7 @@ MonoBehaviour:
   PreviewMode: 0
   delay: 0
   Tile:
-  - {fileID: 11400000, guid: 73d19d21da68afb4db82bcfe945be5da, type: 2}
+  - {fileID: 11400000, guid: 5e675e9bdf1d41547889b4c78f2e59d3, type: 2}
   CostType: 0
   CostAmount: 0
 --- !u!212 &1582167454
@@ -2689,7 +2689,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1772538267}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19930c7365a1e0640b9e2746d4669f7b, type: 3}
+  m_Script: {fileID: 11500000, guid: 03d02ba158305994eb96fd9a46a994d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Layer: 0

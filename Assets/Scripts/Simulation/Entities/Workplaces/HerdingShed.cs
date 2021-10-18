@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class HerdingShed : WorkPlaceBase
 {
+    public HashSet<Point> GrazingTiles;
+
     public HerdingShed(Point location)
     {
         Location = location;
@@ -11,6 +13,7 @@ public class HerdingShed : WorkPlaceBase
         ResourceProduced = ResourceType.Wool;
         Capacity = 2;
         ProductionRate = 0.5f;
+        WorkState = typeof(HerdingState);
     }
 
     public override void UpdateProduction()

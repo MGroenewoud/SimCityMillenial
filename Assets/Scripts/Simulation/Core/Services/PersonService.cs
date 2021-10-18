@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Zenject;
 
 public interface IPersonService
@@ -38,7 +39,7 @@ public class PersonService : IPersonService
         var homesWithSpace = SimulationCore.Instance.AllHomes.Values.Where(h => h.HasSpaceForInhabitant);
         if (homesWithSpace.Any())
         {
-            // Debug.Log(string.Format("Found {0} homes with space", homesWithSpace.Count()));
+            Debug.Log(string.Format("Found {0} homes with space", homesWithSpace.Count()));
             // Filter homes by homes that have access to a market within range
             var homesWithMarketInRange = new HashSet<Point>();
 

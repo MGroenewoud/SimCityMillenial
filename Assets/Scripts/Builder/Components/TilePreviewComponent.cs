@@ -51,7 +51,6 @@ public class TilePreviewComponent : MonoBehaviour
                     _previewMode = false;
                     DestinationLayer.ClearAllEditorPreviewTiles();
                     _previewTiles = new Point[] { };
-
                 }
                 else
                 {

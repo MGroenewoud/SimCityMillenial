@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public abstract class WorkPlaceBase
     public int Capacity;
     public HashSet<Person> Workers;
     public ResourceType ResourceProduced;
+    public Type WorkState;
     /// <summary>
     /// Returns the productionrate per second.
     /// </summary>

@@ -42,13 +42,20 @@ public class MovingState : PersonState
         _person.Movement.PathToDestination = null;
         if (DestinationNeedType != NeedType.None)
             _person.Needs.Needs[DestinationNeedType].Weight = 0;
-        return DestinationNeedType == NeedType.None ? typeof(WorkingState) : typeof(RestingState);
+        if (DestinationNeedType == NeedType.None && _person.Work != null)
+        {
+            return SimulationCore.Instance.AllWorkplaces[_person.Work].WorkState;
+        }
+        else
+        {
+            return typeof(RestingState);
+        }
     }
 
     private void GeneratePath()
     {
         var path = TryGetPath();
-        
+
         if (!path.IsNullOrEmpty())
         {
             _person.Movement.PathToDestination = path;
@@ -73,7 +80,8 @@ public class MovingState : PersonState
                 if (blockedNeeds.Count == _person.Needs.Needs.Count)
                     break;
             }
-        } else
+        }
+        else
         {
             return FindWorkPath();
         }

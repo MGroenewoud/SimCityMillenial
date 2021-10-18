@@ -25,11 +25,13 @@ public class TileSelector : MonoBehaviour
     private int CostAmount = 0;
 
     private ITilePlacementRuleProcessor RulesProcessor;
+    protected IGridSearch GridSearch;
 
     [Inject]
-    public void Construct(ITilePlacementRuleProcessor _rulesProcessor)
+    public void Construct(ITilePlacementRuleProcessor _rulesProcessor, IGridSearch _gridSearch)
     {
         RulesProcessor = _rulesProcessor;
+        GridSearch = _gridSearch;
     }
 
     public void PlaceTile(Tilemap layer, Point position, int id = 0)

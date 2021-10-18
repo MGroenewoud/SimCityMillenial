@@ -6,6 +6,13 @@ public class FarmingShackTile : TileSelector
     {
         Debug.Log("Farming shack placed");
 
-        SimulationCore.Instance.AllWorkplaces.Add(placementPosition, new FarmingShack(placementPosition));
+        var newFarmShack = new FarmingShack(placementPosition);
+
+        var allFarmTiles = GridSearch.FindConnectingTilesOfType(placementPosition, TileEntity.FarmDirt);
+        allFarmTiles.GetInnerTiles();
+
+        newFarmShack.Farmland = allFarmTiles;
+
+        SimulationCore.Instance.AllWorkplaces.Add(placementPosition, newFarmShack);
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 
-public class WorkingState : PersonState
+public class LumberjackState : PersonState
 {
     private Point WorkBase;
     private Point WorkSpot;
@@ -12,7 +12,7 @@ public class WorkingState : PersonState
     private float HarvestRate = 1f;
     private float NextHarvestTick = 0f;
 
-    public WorkingState(Person person) : base(person.gameObject)
+    public LumberjackState(Person person) : base(person.gameObject)
     {
         _person = person;
     }
@@ -21,7 +21,7 @@ public class WorkingState : PersonState
     {
         State = WorkState.MoveToResource;
         WorkBase = _person.CurrentPosition;
-        WorkSpot = SimulationCore.Instance.Grid.GetClosestBuildingOfType(WorkBase, TileEntity.Forest, 10).ToList().RandomItem();
+        WorkSpot = SimulationCore.Instance.Grid.GetClosestBuildingOfType(WorkBase, TileEntity.Forest, 10).RandomItem();
         _person.Movement.GeneratePath(WorkBase, WorkSpot, GameSettings.WalkableTiles);
     }
 
@@ -39,7 +39,7 @@ public class WorkingState : PersonState
                 return ReturnResourcesToBase();
         }
 
-        return typeof(WorkingState);
+        return typeof(LumberjackState);
     }
 
     private void MoveToResource()
@@ -86,7 +86,7 @@ public class WorkingState : PersonState
             _person.Movement.GeneratePath(WorkBase, WorkSpot, GameSettings.WalkableTiles);
             State = WorkState.MoveToResource;
         }
-        return typeof(WorkingState);
+        return typeof(LumberjackState);
     }
 
     public override string ToString()

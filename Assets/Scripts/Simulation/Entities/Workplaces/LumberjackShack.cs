@@ -11,6 +11,7 @@ public class LumberjackShack : WorkPlaceBase
         ResourceProduced = ResourceType.Wood;
         Capacity = 3;
         ProductionRate = 1;
+        WorkState = typeof(LumberjackState);
     }
 
     public override void UpdateProduction()

@@ -72,7 +72,9 @@ public class Person : MonoBehaviour
         {
             { typeof(MovingState), new MovingState(this, GridSearch) },
             { typeof(RestingState), new RestingState(this) },
-            { typeof(WorkingState), new WorkingState(this) },
+            { typeof(LumberjackState), new LumberjackState(this) },
+            { typeof(FarmingState), new FarmingState(this) },
+            { typeof(HerdingState), new HerdingState(this) },
             { typeof(WanderState), new WanderState(this, PersonService, GridSearch) },
         };
         GetComponent<StateMachine>().SetStates(states);
